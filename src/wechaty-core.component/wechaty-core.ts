@@ -21,7 +21,7 @@ import { Brolog } from 'brolog'
 import { IoService, IoEvent } from '../io.service/index'
 
 /**
- * for payload
+ * Payload Interfaces
  */
 export interface ScanInfo {
   url: string
@@ -43,51 +43,67 @@ export interface UserInfo {
   , styleUrls: ['wechaty-core.css']
 })
 
-export class WechatyCoreComponent implements OnInit, OnDestroy {
-  @Output() message   = new EventEmitter<string>()
+export class WechatyCoreCmp implements OnInit, OnDestroy {
+  @Output() heartbeat = new EventEmitter<any>()
   @Output() scan      = new EventEmitter<ScanInfo>()
   @Output() login     = new EventEmitter<UserInfo>()
+  @Output() message   = new EventEmitter<string>()
   @Output() logout    = new EventEmitter<UserInfo>()
   @Output() error     = new EventEmitter<any>()
-  @Output() heartbeat = new EventEmitter<any>()
 
-  @Input() token: string = ''
+  private _token: string
+  @Input()
+  set token(token: string) {
+    this.log.verbose('WechatyCoreCmp', 'set token(%s)', token)
+    if (token && this._token !== token) {
+      this.log.verbose('WechatyCoreCmp', 'new token found')
+      this._token = token.trim()
+      if (this.ioService) { // There's no IoService when instanciate this component
+        this.log.verbose('WechatyCoreCmp', 'ioService set new token') 
+        this.ioService.setToken(this._token)
+        this.ioService.restart()
+      }
+    }
+  }
+  get token() { return this._token }
 
-  private ioSubscription: any
+  private ioSubscription: Subscription
   private ioService: IoService
 
-  counter = 0
+  private npmVersion: string = 'TODO: support version'
 
+  counter = 0
+  
   constructor(
     private ngZone: NgZone
     , private log: Brolog
     , private injector: Injector
   ) {
-    this.log.verbose('Wechaty', 'constructor()')
+    this.log.verbose('WechatyCoreCmp', 'constructor()')
+    // TBD: how to do this in browser with typescript? 
+    // this.npmVersion = require('../package.json').version
+
+    this.ioService = new IoService(injector)
   }
 
   ngOnInit() {
-    this.log.verbose('Wechaty', 'ngOninit() with token: ' + this.token)
+    this.log.verbose('WechatyCoreCmp', 'ngOninit() with token: ' + this.token)
 
     /**
      * IoService must be put inside OnInit
      * because it used @Input(token)
      * which is not inittialized in constructor()
      */
-    const ioService = this.ioService = new IoService(
-      this.token
-      , this.injector
-    )
-    ioService.start()
+    this.ioService.setToken(this.token)
+    this.ioService.start()
 
-    this.ioSubscription = ioService.io()
+    this.ioSubscription = this.ioService.io()
                           .subscribe(this.onIo.bind(this))
 
-    // this.startTimer()
   }
 
   ngOnDestroy() {
-    this.log.verbose('Wechaty', 'ngOnDestroy()')
+    this.log.verbose('WechatyCoreCmp', 'ngOnDestroy()')
 
     if (this.ioSubscription) {
       this.ioSubscription.unsubscribe()
@@ -99,7 +115,7 @@ export class WechatyCoreComponent implements OnInit, OnDestroy {
   }
 
   private onIo(e: IoEvent) {
-    this.log.silly('Wechaty', 'onIo#%d(%s)', this.counter++, e.name)
+    this.log.silly('WechatyCoreCmp', 'onIo#%d(%s)', this.counter++, e.name)
 
     switch(e.name) {
       case 'scan':
@@ -108,11 +124,11 @@ export class WechatyCoreComponent implements OnInit, OnDestroy {
       case 'login':
         this.login.emit(e.payload as UserInfo)
         break
-      case 'logout':
-        this.logout.emit(e.payload as UserInfo)
-        break
       case 'message':
         this.message.emit(e.payload)
+        break
+      case 'logout':
+        this.logout.emit(e.payload as UserInfo)
         break
       case 'error':
         this.error.emit(e.payload)
@@ -128,17 +144,17 @@ export class WechatyCoreComponent implements OnInit, OnDestroy {
         break
 
       case 'sys':
-        this.log.silly('Wechaty', 'onIo(%s): %s', e.name, e.payload)
+        this.log.silly('WechatyCoreCmp', 'onIo(%s): %s', e.name, e.payload)
         break
 
       default:
-        this.log.warn('Wechaty', 'onIo() unknown event name: %s[%s]', e.name, e.payload)
+        this.log.warn('WechatyCoreCmp', 'onIo() unknown event name: %s[%s]', e.name, e.payload)
         break
     }
   }
 
-  reset(reason) {
-    this.log.verbose('Wechaty', 'reset(%s)', reason)
+  reset(reason?: string) {
+    this.log.verbose('WechatyCoreCmp', 'reset(%s)', reason)
 
     const resetEvent: IoEvent = {
       name: 'reset'
@@ -148,8 +164,8 @@ export class WechatyCoreComponent implements OnInit, OnDestroy {
         .next(resetEvent)
   }
 
-  shutdown(reason) {
-    this.log.verbose('Wechaty', 'shutdown(%s)', reason)
+  shutdown(reason?: string) {
+    this.log.verbose('WechatyCoreCmp', 'shutdown(%s)', reason)
 
     const shutdownEvent: IoEvent = {
       name: 'shutdown'
@@ -158,5 +174,7 @@ export class WechatyCoreComponent implements OnInit, OnDestroy {
     this.ioService.io()
         .next(shutdownEvent)
   }
+
+  version() { return this.npmVersion}
 
 }

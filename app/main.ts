@@ -1,9 +1,9 @@
 import { bootstrap }    from '@angular/platform-browser-dynamic'
-import { AppComponent}  from './app.component'
-
 import { Brolog } from 'brolog' // Npmlog for Browser - https://github.com/zixia/brolog
 
-bootstrap(AppComponent, [
+import { WechatyAppCmp} from './app.component'
+
+bootstrap(WechatyAppCmp, [
   Brolog('SILLY')
 ])
 .catch(err => console.error(err))

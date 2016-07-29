@@ -5,20 +5,20 @@ import {
   async, inject
 } from '@angular/core/testing'
 
-import { AppComponent } from './app.component'
+import { WechatyAppCmp } from './app.component'
 
 beforeEachProviders(() => [
-  AppComponent
+  WechatyAppCmp
 ])
 
 describe('App: NgTest', () => {
   it('should create the app'
-      , inject([AppComponent], (app: AppComponent) => {
+      , inject([WechatyAppCmp], (app: WechatyAppCmp) => {
     expect(app).toBeTruthy()
   }))
 
   it('should have as title "Wechaty APP"'
-      , inject([AppComponent], (app: AppComponent) => {
+      , inject([WechatyAppCmp], (app: WechatyAppCmp) => {
     expect(app.title).toEqual('Wechaty APP')
   }))
 })

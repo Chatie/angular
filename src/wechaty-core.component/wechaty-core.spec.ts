@@ -7,19 +7,19 @@ import {
 
 import { Brolog } from 'brolog'
 
-import { WechatyCoreComponent } from './wechaty-core'
+import { WechatyCoreCmp } from './wechaty-core'
 
-beforeEachProviders(() => [WechatyCoreComponent, Brolog])
+beforeEachProviders(() => [WechatyCoreCmp, Brolog])
 
-describe('WechatyCoreComponent Test', () => {
+describe('WechatyCoreCmp Test', () => {
   it('should create the app'
-    , inject([WechatyCoreComponent], (wechaty: WechatyCoreComponent) => {
+    , inject([WechatyCoreCmp], (wechaty: WechatyCoreCmp) => {
       expect(wechaty).toBeTruthy()
     })
   )
 
   it('should have as content "app works!"',
-    inject([WechatyCoreComponent], (wechaty: WechatyCoreComponent) => {
+    inject([WechatyCoreCmp], (wechaty: WechatyCoreCmp) => {
       expect(wechaty.token).toEqual('')
     })
   )

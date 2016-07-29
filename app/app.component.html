@@ -1,15 +1,44 @@
 <h1>{{ title }}</h1>
 
-<script>
-  function zixia(e) {
-    console.log(e)
-  }
-</script>
+<wechaty-core 
+  #wechaty
+  token="WECHATY_TOKEN"
+  
+  (heartbeat) = "onEvent('heartbeat' , $event)"
+  (scan)      = "onEvent('scan'      , $event)"
+  (login)     = "onEvent('login'     , $event)"
+  (message)   = "onEvent('message'   , $event)"
+  (logout)    = "onEvent('logout'    , $event)"
+  (error)     = "onEvent('error'     , $event)"
+>
+  <h2>Wechaty Core Web Component</h2>
+
+  <label for="token">Please provide WECHATY_TOKEN to active wechaty-core web component.</label>
+  <input type="text" [(ngModel)]="token" name="token">
+  <button (click)="setToken(wechaty)">Set Token</button>
+
+  <div>token: {{ token }} # {{ wechaty.counter }} </div>
+
+  <ol>
+    <li>heartbeat:  {{ lastEvent.heartbeat }}</li>
+    <li>scan:       {{ lastEvent.scan }}</li>
+    <li>login:      {{ lastEvent?.login }}</li>
+    <li>message:    {{ lastEvent?.message }}</li>
+    <li>logout:     {{ lastEvent?.logout }}</li>
+    <li>error:      {{ lastEvent?.error }}</li>
+  </ol>
 
 
-<wechaty-core token="zixia">
-  Wechaty Component
-  <script>
-    zixia('here')
-  </script>
+  <button (click)="reset(wechaty)">Reseet</button>
+  <button (click)="shutdown(wechaty)">Shutdown</button>
+
 </wechaty-core>
+
+<ol>
+  <li *ngFor='let e of lastEvent'>
+    {{ e }}
+  </li>
+</ol>
+<pre>
+{{ lastEvent | json }}
+</pre>

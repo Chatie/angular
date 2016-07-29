@@ -11,12 +11,11 @@ import {
 import { Brolog } from 'brolog'
 
 export type WechatyEventName = 
-  'scan'
+  'heartbeat'
   | 'login' | 'logout'
   | 'reset' | 'shutdown'
   | 'ding'  | 'dong'
-  | 'message'
-  | 'heartbeat'
+  | 'scan'  | 'message'
   | 'update'
   | 'error'
 
@@ -36,6 +35,7 @@ export interface IoEvent {
 export class IoService {
   private ENDPOINT = 'wss://api.wechaty.io/v0/websocket/token/'
   private PROTOCOL = 'web|0.0.1'
+  private token: string
 
   private websocket: WebSocket
   private subscriber: Subscriber<IoEvent>
@@ -47,20 +47,26 @@ export class IoService {
   private autoReconnect = true
 
   constructor(
-    private token: string
-    , private injector: Injector
+    private injector: Injector
    ) {
-    this.log.verbose('IoService', 'constructor(%s)', token)
-    // console.log(injector)
+    this.log.verbose('IoService', 'constructor()')
   }
 
   io() {
     return this.ioSubject
   }
 
-  start(): Promise<IoService> {
-    this.log.verbose('IoService', 'start()')
+  setToken(token: string) {
+    this.log.verbose('IoService', 'setToken(%s)', token)
+    this.token = token
+  }
 
+  start(): Promise<IoService> {
+    this.log.verbose('IoService', 'start() with token:[%s]', this.token)
+
+    if (!this.token){
+      this.log.warn('IoService', 'start() without valid token:[%s]', this.token)
+    }
     this.autoReconnect = true
 
     return this.initIoSubject()
@@ -77,9 +83,14 @@ export class IoService {
 
     this.autoReconnect = false
 
-    this.websocket.close(1000, 'IoService.stop()')
-    this.ioSubject.unsubscribe()
+    this.websocket && this.websocket.close(1000, 'IoService.stop()')
+    this.ioSubject && this.ioSubject.unsubscribe()
+
     return Promise.resolve(this)
+  }
+
+  restart(): Promise<IoService> {
+    return this.stop().then(_ => this.start())
   }
 
   ding(payload) {
@@ -117,10 +128,10 @@ export class IoService {
   }
 
   private initWebSocket() {
-    this.log.verbose('IoService', 'initWebSocket()')
+    this.log.verbose('IoService', 'initWebSocket() with token:[%s]', this.token)
 
-    if (this.websocket) {
-      this.log.warn('IoService', 'initWebSocket() there already has a websocket. will go ahead and overwrite it')
+    if (this.alive()) {
+      this.log.warn('IoService', 'initWebSocket() there already has a live websocket. will go ahead and overwrite it')
     }
 
     this.websocket = new WebSocket(this.endPoint(), this.PROTOCOL)
