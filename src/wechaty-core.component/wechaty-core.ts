@@ -53,11 +53,7 @@ export class WechatyCoreComponent implements OnInit, OnDestroy {
 
   @Input() token: string = ''
 
-  private timer: Observable<any>
-  private timerSub: Subscription
   private ioSubscription: any
-  private ender: Subject<any>
-
   private ioService: IoService
 
   counter = 0
@@ -92,8 +88,6 @@ export class WechatyCoreComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.log.verbose('Wechaty', 'ngOnDestroy()')
-
-    this.endTimer()
 
     if (this.ioSubscription) {
       this.ioSubscription.unsubscribe()
@@ -163,44 +157,6 @@ export class WechatyCoreComponent implements OnInit, OnDestroy {
     }
     this.ioService.io()
         .next(shutdownEvent)
-  }
-
-  private startTimer() {
-    this.log.verbose('Wechaty', 'startTimer()')
-    this.ender = new Subject()
-
-    // https://github.com/angular/protractor/issues/3349#issuecomment-232253059
-    // https://github.com/juliemr/ngconf-2016-zones/blob/master/src/app/main.ts#L38
-    this.ngZone.runOutsideAngular(() => {
-      this.timer = Observable.interval(3000)
-          .do(i => { this.log.verbose('do', ' %d', i) })
-          .takeUntil(this.ender)
-          // .publish()
-          .share()
-    })
-
-    this.timerSub = this.timer.subscribe(t => {
-      this.counter = t
-
-      this.ioService.ding(this.counter)
-      // this.message.emit('#' + this.token + ':' + dong)
-    })
-
-  }
-
-  private endTimer() {
-    this.log.verbose('Wechaty', 'endTimer()')
-
-    if (this.timerSub) {
-      this.timerSub.unsubscribe()
-      this.timerSub = null
-    }
-    this.timer = null
-
-    if (this.ender) {
-      this.ender.next(null)
-      this.ender = null
-    }
   }
 
 }

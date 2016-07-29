@@ -15,6 +15,7 @@ export type WechatyEventName =
   | 'login' | 'logout'
   | 'reset' | 'shutdown'
   | 'ding'  | 'dong'
+  | 'message'
   | 'heartbeat'
   | 'update'
   | 'error'

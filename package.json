@@ -1,11 +1,12 @@
 {
   "name": "wechaty-angular-core",
   "version": "0.0.1",
-  "description": "Wechaty Core Web Component for Angular (WechatyComponent / IoService)",
+  "description": "Wechaty Core Web Component for Angular",
   "main": "index.ts",
   "scripts": {
     "start": "lite-server start& echo $! > server.pid",
     "stop": "kill $(cat server.pid)",
+    "postinstall": "typings install",
     "test": "echo test"
   },
   "repository": {
@@ -14,7 +15,9 @@
   },
   "keywords": [
     "wechaty",
-    "wechaty-angular"
+    "wechaty-angular",
+    "WechatyCoreComponent",
+    "wechaty-core"
   ],
   "author": "Zhuohuan LI <zixia@zixia.net>",
   "license": "MIT",

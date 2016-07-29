@@ -5,11 +5,12 @@ import { WechatyCoreComponent } from '../src/wechaty-core.component/index'
   selector: 'wechaty-app'
   , moduleId: module.id
   , templateUrl: 'app.component.html'
-  , directives: [WechatyCoreComponent]
+  , directives: [
+    WechatyCoreComponent
+  ]
 })
 
 export class AppComponent {
   title = 'Wechaty APP'
-
   constructor() {}
 }
