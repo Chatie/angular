@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <title>Wechaty APP</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="//npmcdn.com/core-js/client/shim.min.js"></script>
+  <script src="//npmcdn.com/zone.js"></script>
+  <script src="//npmcdn.com/reflect-metadata"></script>
+  <script src="//npmcdn.com/systemjs/dist/system.js"></script>
+
+
+	<script>
+  var config = {
+    // DEMO ONLY! REAL CODE SHOULD NOT TRANSPILE IN THE BROWSER
+    transpiler: 'ts'
+    , typescriptOptions: { 
+        emitDecoratorMetadata: true 
+        , module: 'commonjs'
+        , experimentalDecorators: true
+    }
+    , map: {
+      '@angular/core':                        '//npmcdn.com/@angular/core/bundles/core.umd.min.js'
+      , '@angular/common':                    '//npmcdn.com/@angular/common/bundles/common.umd.min.js'
+      , '@angular/compiler':                  '//npmcdn.com/@angular/compiler/bundles/compiler.umd.min.js'
+      , '@angular/platform-browser':          '//npmcdn.com/@angular/platform-browser/bundles/platform-browser.umd.min.js'
+      , '@angular/platform-browser-dynamic':  '//npmcdn.com/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.min.js'
+      , 'typescript':                         '//npmcdn.com/typescript@^2/lib/typescript.js'
+      , 'rxjs':                               '//npmcdn.com/rxjs@5.0.0-beta.6'
+      , 'ts':                                 '//npmcdn.com/plugin-typescript/lib/plugin.js' // CommonJS for module.id(relative path support)
+      , 'brolog':                             '//npmcdn.com/brolog'
+    }
+    , packages: {
+      'app': {
+        defaultExtension: 'ts' 
+        , main: 'main'
+      }
+      , 'src': { // https://github.com/frankwallis/plugin-typescript/issues/28
+        'defaultExtension': 'ts'
+      }
+    }
+    , meta: { // https://github.com/systemjs/systemjs/issues/1266#issuecomment-219193736
+      'typescript': {
+        "exports": "ts"
+        , defaultExtension: 'ts' 
+      }
+    }
+  }
+  System.config(config)
+
+  System.import('app')
+        .then(_ => console.log('System import success'))
+        .catch(e => console.log(e))
+
+  </script>
+
+
+</head>
+<body>
+
+  
+  <wechaty-app>
+    <h1>Wechaty Loading...</h1>
+  </wechaty-app>
+
+
+</body>
+</html>
