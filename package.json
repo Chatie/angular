@@ -33,5 +33,14 @@
   },
   "dependencies": {
     "brolog": "^0.3.6"
-  }
+  },
+  "files": [
+    "package.json",
+    "README.md",
+    "CHANGELOG",
+    "LICENSE",
+    "index.ts",
+    "index.d.ts",
+    "src/"
+  ]
 }
