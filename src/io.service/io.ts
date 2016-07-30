@@ -103,6 +103,13 @@ export class IoService {
     this.io().next(e)
   }
 
+  online(): boolean {
+    return this.websocket && (this.websocket.readyState === WebSocket.OPEN)
+  }
+  connecting(): boolean {
+    return this.websocket && (this.websocket.readyState === WebSocket.CONNECTING)
+  }
+
   private initIoSubject() {
     this.log.verbose('IoService', 'initIoSubject()')
 
@@ -130,7 +137,7 @@ export class IoService {
   private initWebSocket() {
     this.log.verbose('IoService', 'initWebSocket() with token:[%s]', this.token)
 
-    if (this.alive()) {
+    if (this.online()) {
       this.log.warn('IoService', 'initWebSocket() there already has a live websocket. will go ahead and overwrite it')
     }
 
@@ -148,10 +155,6 @@ export class IoService {
     return this.ENDPOINT + this.token
   }
 
-  private alive() {
-    return this.websocket && (this.websocket.readyState === WebSocket.OPEN)
-  }
-
   private wsClose() {
     this.log.verbose('IoService', 'wsClose()')
 
@@ -164,7 +167,7 @@ export class IoService {
 
     const message = JSON.stringify(e)
 
-    if (this.alive()) {
+    if (this.online()) {
       // 1. check buffer for send old ones
       while (this.sendBuffer.length) {
         this.log.verbose('IoService', 'wsSend() buffer processing: length: %d', this.sendBuffer.length)

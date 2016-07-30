@@ -13,32 +13,31 @@
 >
   <h2>Wechaty Core Web Component</h2>
 
-  <label for="token">Please provide WECHATY_TOKEN to active wechaty-core web component.</label>
-  <input type="text" [(ngModel)]="token" name="token">
-  <button (click)="setToken(wechaty)">Set Token</button>
+  <label for="token">Put Your WECHATY_TOKEN here:</label>
+  <input 
+    type="text" 
+    [(ngModel)]="token" 
+    name="token"
+    placeholder="WECHATY_TOKEN"
+    [style.background-color] = "wechaty.online() ? 'green' : wechaty.connecting() ? 'yellow' : 'red'"
+  >
+  <button (click)="wechaty.token = token">Set Token</button>
 
-  <div>token: {{ token }} # {{ wechaty.counter }} </div>
+  <div>
+    Event Counter: {{ wechaty.counter }}
+  </div>
 
   <ol>
-    <li>heartbeat:  {{ lastEvent.heartbeat }}</li>
-    <li>scan:       {{ lastEvent.scan }}</li>
-    <li>login:      {{ lastEvent?.login }}</li>
-    <li>message:    {{ lastEvent?.message }}</li>
-    <li>logout:     {{ lastEvent?.logout }}</li>
-    <li>error:      {{ lastEvent?.error }}</li>
+    <li 
+      *ngFor = "let event of ['heartbeat', 'scan', 'login', 'message', 'logout', 'error']"
+      [style.color] = "event == lastEventName ? 'red' : ''"
+    >
+      {{ event }} : {{ lastEvents[event] | json }}
+    </li>
   </ol>
 
-
-  <button (click)="reset(wechaty)">Reseet</button>
-  <button (click)="shutdown(wechaty)">Shutdown</button>
+  <button (click)="wechaty.reset()">    Reseet</button>
+  <button (click)="wechaty.shutdown()"> Shutdown</button>
+  <button (click)="wechaty.logoff()">   Logoff</button>
 
 </wechaty-core>
-
-<ol>
-  <li *ngFor='let e of lastEvent'>
-    {{ e }}
-  </li>
-</ol>
-<pre>
-{{ lastEvent | json }}
-</pre>

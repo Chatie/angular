@@ -80,7 +80,7 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
     , private injector: Injector
   ) {
     this.log.verbose('WechatyCoreCmp', 'constructor()')
-    // TBD: how to do this in browser with typescript? 
+    // TBD: how to do import version from json file in browser with typescript? 
     // this.npmVersion = require('../package.json').version
 
     this.ioService = new IoService(injector)
@@ -90,16 +90,13 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
     this.log.verbose('WechatyCoreCmp', 'ngOninit() with token: ' + this.token)
 
     /**
-     * IoService must be put inside OnInit
-     * because it used @Input(token)
-     * which is not inittialized in constructor()
+     * @Input(token) is not inittialized in constructor()
      */
     this.ioService.setToken(this.token)
     this.ioService.start()
 
     this.ioSubscription = this.ioService.io()
                           .subscribe(this.onIo.bind(this))
-
   }
 
   ngOnDestroy() {
@@ -173,6 +170,29 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
     }
     this.ioService.io()
         .next(shutdownEvent)
+  }
+
+  logoff(reason?: string) { // use the name `logoff` here to prevent conflict with @Output(logout) 
+    this.log.verbose('WechatyCoreCmp', 'logoff(%s)', reason)
+
+    const quitEvent: IoEvent = {
+      name: 'logout'
+      , payload: reason
+    }
+    this.ioService.io()
+        .next(quitEvent)
+  }
+
+  online(): boolean {
+    return this.ioService.online()
+  }
+
+  connecting(): boolean {
+    return this.ioService.connecting()
+  }
+
+  offline(): boolean {
+    return !(this.online() || this.connecting())
   }
 
   version() { return this.npmVersion}
