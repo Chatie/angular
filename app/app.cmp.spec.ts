@@ -5,7 +5,7 @@ import {
   async, inject
 } from '@angular/core/testing'
 
-import { WechatyAppCmp } from './app.component'
+import { WechatyAppCmp } from './app.cmp'
 
 beforeEachProviders(() => [
   WechatyAppCmp

@@ -1,20 +1,18 @@
 import {
   Component
-  // , ChangeDetectionStrategy
 } from '@angular/core'
 
 import { Brolog } from 'brolog'
 
-import { WechatyCoreCmp } from '../src/wechaty-core.component/index'
+import { WechatyCoreCmp } from '../src/wechaty-core.cmp/index'
 
 @Component({
   selector: 'wechaty-app'
   , moduleId: module.id
-  , templateUrl: 'app.component.html'
+  , templateUrl: 'app.cmp.html'
   , directives: [
     WechatyCoreCmp
   ]
-  // , changeDetection: ChangeDetectionStrategy.Default
 })
 
 export class WechatyAppCmp {

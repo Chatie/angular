@@ -1,12 +1,10 @@
 import {
   Component
-  , Inject
   , OnInit
   , OnDestroy
   , EventEmitter
   , Input
   , Output
-  , NgZone
   , Injector
 } from '@angular/core'
 
@@ -21,7 +19,7 @@ import { Brolog } from 'brolog'
 import { IoService, IoEvent } from '../io.service/index'
 
 /**
- * Payload Interfaces
+ * IoEvent Payload Interfaces
  */
 export interface ScanInfo {
   url: string
@@ -37,10 +35,8 @@ export interface UserInfo {
 }
 
 @Component({
-  moduleId: module.id
-  , selector: 'wechaty-core'
-  , templateUrl: 'wechaty-core.html'
-  , styleUrls: ['wechaty-core.css']
+  selector: 'wechaty-core'
+  , template: '<ng-content></ng-content>'
 })
 
 export class WechatyCoreCmp implements OnInit, OnDestroy {
@@ -56,10 +52,10 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   set token(token: string) {
     this.log.verbose('WechatyCoreCmp', 'set token(%s)', token)
     if (token && this._token !== token) {
-      this.log.verbose('WechatyCoreCmp', 'new token found')
+      // this.log.verbose('WechatyCoreCmp', 'new token found')
       this._token = token.trim()
       if (this.ioService) { // There's no IoService when instanciate this component
-        this.log.verbose('WechatyCoreCmp', 'ioService set new token') 
+        // this.log.verbose('WechatyCoreCmp', 'ioService set new token') 
         this.ioService.setToken(this._token)
         this.ioService.restart()
       }
@@ -75,8 +71,7 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   counter = 0
   
   constructor(
-    private ngZone: NgZone
-    , private log: Brolog
+    private log: Brolog
     , private injector: Injector
   ) {
     this.log.verbose('WechatyCoreCmp', 'constructor()')
@@ -196,5 +191,4 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   }
 
   version() { return this.npmVersion}
-
 }
