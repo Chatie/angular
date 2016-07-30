@@ -13,7 +13,7 @@
 >
   <h2>Wechaty Core Web Component</h2>
 
-  <label for="token">Please provide WECHATY_TOKEN to active wechaty-core web component:</label>
+  <label for="token">Put Your WECHATY_TOKEN here:</label>
   <input 
     type="text" 
     [(ngModel)]="token" 
@@ -21,7 +21,12 @@
     placeholder="WECHATY_TOKEN"
     [style.background-color] = "wechaty.online() ? 'green' : wechaty.connecting() ? 'yellow' : 'red'"
   >
-  <button (click)="setToken(wechaty)">Set Token</button>
+  <button (click)="wechaty.token = token">Set Token</button>
+
+  <div>
+    Event Counter: {{ wechaty.counter }}
+  </div>
+
   <ol>
     <li 
       *ngFor = "let event of ['heartbeat', 'scan', 'login', 'message', 'logout', 'error']"
@@ -36,12 +41,3 @@
   <button (click)="wechaty.logoff()">   Logoff</button>
 
 </wechaty-core>
-
-<!-- ol>
-  <li *ngFor='let e of lastEvent'>
-    {{ e }}
-  </li>
-</ol -->
-<!-- pre>
-{{ lastEvent | json }}
-</pre -->
