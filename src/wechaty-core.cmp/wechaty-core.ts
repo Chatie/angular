@@ -51,15 +51,16 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   @Input()
   set token(token: string) {
     this.log.verbose('WechatyCoreCmp', 'set token(%s)', token)
-    if (token && this._token !== token) {
-      // this.log.verbose('WechatyCoreCmp', 'new token found')
-      this._token = token.trim()
-      if (this.ioService) { // There's no IoService when instanciate this component
-        // this.log.verbose('WechatyCoreCmp', 'ioService set new token') 
-        this.ioService.setToken(this._token)
-        this.ioService.restart()
-      }
+    if (token && this._token === token) {
+      return
     }
+    this._token = token.trim()
+
+    if (!this.ioSubscription) {
+      return
+    }
+    this.ioService.setToken(this._token)
+    this.ioService.restart()
   }
   get token() { return this._token }
 

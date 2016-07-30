@@ -5,5 +5,4 @@ import { WechatyAppCmp} from './app.cmp'
 
 bootstrap(WechatyAppCmp, [
   Brolog('SILLY')
-])
-.catch(err => console.error(err))
+]).catch(err => console.error(err))

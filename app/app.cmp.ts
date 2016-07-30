@@ -16,7 +16,7 @@ import { WechatyCoreCmp } from '../src/wechaty-core.cmp/index'
 })
 
 export class WechatyAppCmp {
-  title = 'Wechaty APP'
+  title = 'Wechaty APP Component'
 
   token: string
   lastEvents: any = {}

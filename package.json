@@ -14,7 +14,7 @@
     "posttest": "",
     "unit": "jasmine --version",
     "pree2e": "npm start",
-    "e2e": "protractor protractor.conf.js",
+    "e2e": "protractor test/protractor.conf.js",
     "poste2e": "npm stop"
   },
   "repository": {
@@ -35,8 +35,10 @@
   "homepage": "https://github.com/zixia/wechaty-angular-core#readme",
   "devDependencies": {
     "jasmine": "^2.4.1",
+    "jasmine-spec-reporter": "^2.5.0",
     "lite-server": "^2.2.2",
     "protractor": "^4.0.2",
+    "ts-node": "^1.2.2",
     "typescript": "^2.0.0",
     "typings": "^1.3.2"
   },

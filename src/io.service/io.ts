@@ -90,6 +90,7 @@ export class IoService {
   }
 
   restart(): Promise<IoService> {
+    this.log.verbose('IoService', 'restart()')
     return this.stop().then(_ => this.start())
   }
 
