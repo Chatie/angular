@@ -175,6 +175,25 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
         .next(shutdownEvent)
   }
 
+  logoff(reason?: string) { // use the name `logoff` here to prevent conflict with @Output(logout) 
+    this.log.verbose('WechatyCoreCmp', 'logoff(%s)', reason)
+
+    const quitEvent: IoEvent = {
+      name: 'logout'
+      , payload: reason
+    }
+    this.ioService.io()
+        .next(quitEvent)
+  }
+
+  online(): boolean {
+    return this.ioService.online()
+  }
+
+  connecting(): boolean {
+    return this.ioService.connecting()
+  }
+
   version() { return this.npmVersion}
 
 }

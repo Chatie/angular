@@ -21,7 +21,8 @@ export class WechatyAppCmp {
   title = 'Wechaty APP'
 
   token: string
-  lastEvent: any = []
+  lastEvents: any = {}
+  lastEventName: string
 
   constructor(private log: Brolog) {
     log.verbose('WechatyAppCmp', 'constructor()')
@@ -34,8 +35,11 @@ export class WechatyAppCmp {
   onEvent(name: string, data: any) {
     this.log.verbose('WechatyAppCmp', 'onEvent(%s, %s)', name, data)
 
-    this.lastEvent.push(name + ':' + JSON.stringify(data))
-        
+    // this.lastEvent.push(name + ':' + JSON.stringify(data))
+    this.lastEventName = name
+    this.lastEvents[name] = data
+    // this.lastEvents.push(data)
+
     // const newEvent = {}
     // newEvent[name] = data
 
@@ -45,13 +49,5 @@ export class WechatyAppCmp {
     // this.lastEvent = obj
     // // this.lastEvent[name] = data
     // console.log(this.lastEvent)
-  }
-
-  shutdown(wechaty: WechatyCoreCmp) {
-    wechaty.shutdown('by WechatyAppCmp')
-  }
-
-  reset(wechaty: WechatyCoreCmp) {
-    wechaty.reset('by WechatyAppCmp')
   }
 }

@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "lite-server start& echo $! > server.pid",
+    "start:fg": "lite-server start& echo $! > server.pid",
     "stop": "kill $(cat server.pid)",
     "postinstall": "typings install",
     "test": "echo test"
