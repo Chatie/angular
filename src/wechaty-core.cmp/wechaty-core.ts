@@ -47,22 +47,9 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   @Output() logout    = new EventEmitter<UserInfo>()
   @Output() error     = new EventEmitter<any>()
 
-  private _token: string
-  @Input()
-  set token(token: string) {
-    this.log.verbose('WechatyCoreCmp', 'set token(%s)', token)
-    if (token && this._token === token) {
-      return
-    }
-    this._token = token.trim()
-
-    if (!this.ioSubscription) {
-      return
-    }
-    this.ioService.setToken(this._token)
-    this.ioService.restart()
-  }
+  @Input() set token(token: string) { this.updateToken(token) }
   get token() { return this._token }
+  private _token: string
 
   private ioSubscription: Subscription
   private ioService: IoService
@@ -70,12 +57,18 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   private npmVersion: string = 'TODO: support version'
 
   counter = 0
+  timestamp = new Date()
   
+  /**
+   * 
+   * Constructor
+   * 
+   */
   constructor(
     private log: Brolog
     , private injector: Injector
   ) {
-    this.log.verbose('WechatyCoreCmp', 'constructor()')
+    this.log.silly('WechatyCoreCmp', 'constructor()')
     // TBD: how to do import version from json file in browser with typescript? 
     // this.npmVersion = require('../package.json').version
 
@@ -83,7 +76,7 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.log.verbose('WechatyCoreCmp', 'ngOninit() with token: ' + this.token)
+    this.log.silly('WechatyCoreCmp', 'ngOninit() with token: ' + this.token)
 
     /**
      * @Input(token) is not inittialized in constructor()
@@ -96,7 +89,7 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.log.verbose('WechatyCoreCmp', 'ngOnDestroy()')
+    this.log.silly('WechatyCoreCmp', 'ngOnDestroy()')
 
     if (this.ioSubscription) {
       this.ioSubscription.unsubscribe()
@@ -109,6 +102,7 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
 
   private onIo(e: IoEvent) {
     this.log.silly('WechatyCoreCmp', 'onIo#%d(%s)', this.counter++, e.name)
+    this.timestamp = new Date()
 
     switch(e.name) {
       case 'scan':
@@ -146,8 +140,22 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
     }
   }
 
+  private updateToken(token: string) {
+    this.log.silly('WechatyCoreCmp', 'set token(%s)', token)
+    if (token && this._token === token) {
+      return
+    }
+    this._token = token.trim()
+
+    if (!this.ioSubscription) {
+      return
+    }
+    this.ioService.setToken(this._token)
+    this.ioService.restart()
+  }
+
   reset(reason?: string) {
-    this.log.verbose('WechatyCoreCmp', 'reset(%s)', reason)
+    this.log.silly('WechatyCoreCmp', 'reset(%s)', reason)
 
     const resetEvent: IoEvent = {
       name: 'reset'
@@ -158,7 +166,7 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   }
 
   shutdown(reason?: string) {
-    this.log.verbose('WechatyCoreCmp', 'shutdown(%s)', reason)
+    this.log.silly('WechatyCoreCmp', 'shutdown(%s)', reason)
 
     const shutdownEvent: IoEvent = {
       name: 'shutdown'
@@ -169,7 +177,7 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
   }
 
   logoff(reason?: string) { // use the name `logoff` here to prevent conflict with @Output(logout) 
-    this.log.verbose('WechatyCoreCmp', 'logoff(%s)', reason)
+    this.log.silly('WechatyCoreCmp', 'logoff(%s)', reason)
 
     const quitEvent: IoEvent = {
       name: 'logout'

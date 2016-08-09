@@ -49,7 +49,7 @@ export class IoService {
   constructor(
     private injector: Injector
    ) {
-    this.log.verbose('IoService', 'constructor()')
+    this.log.silly('IoService', 'constructor()')
   }
 
   io() {
@@ -57,12 +57,12 @@ export class IoService {
   }
 
   setToken(token: string) {
-    this.log.verbose('IoService', 'setToken(%s)', token)
+    this.log.silly('IoService', 'setToken(%s)', token)
     this.token = token
   }
 
   start(): Promise<IoService> {
-    this.log.verbose('IoService', 'start() with token:[%s]', this.token)
+    this.log.silly('IoService', 'start() with token:[%s]', this.token)
 
     if (!this.token){
       this.log.warn('IoService', 'start() without valid token:[%s]', this.token)
@@ -73,13 +73,13 @@ export class IoService {
     .then(_ => this.initWebSocket())
     .then(_ => this)
     .catch(e => {
-      this.log.verbose('IoService', 'start() exception: %s', e.message)
+      this.log.silly('IoService', 'start() exception: %s', e.message)
       throw e
     })
   }
 
   stop(): Promise<IoService> {
-    this.log.verbose('IoService', 'stop()')
+    this.log.silly('IoService', 'stop()')
 
     this.autoReconnect = false
 
@@ -90,12 +90,12 @@ export class IoService {
   }
 
   restart(): Promise<IoService> {
-    this.log.verbose('IoService', 'restart()')
+    this.log.silly('IoService', 'restart()')
     return this.stop().then(_ => this.start())
   }
 
   ding(payload) {
-    this.log.verbose('IoService', 'ding(%s)', payload)
+    this.log.silly('IoService', 'ding(%s)', payload)
 
     const e: IoEvent = {
       name: 'ding'
@@ -112,11 +112,11 @@ export class IoService {
   }
 
   private initIoSubject() {
-    this.log.verbose('IoService', 'initIoSubject()')
+    this.log.silly('IoService', 'initIoSubject()')
 
     return new Promise(resolve => {
       const observable = Observable.create(subscriber => {
-        this.log.verbose('IoService', 'initIoSubject() Observable.create()')
+        this.log.silly('IoService', 'initIoSubject() Observable.create()')
         this.subscriber = subscriber
 
         ////////////////////////
@@ -136,7 +136,7 @@ export class IoService {
   }
 
   private initWebSocket() {
-    this.log.verbose('IoService', 'initWebSocket() with token:[%s]', this.token)
+    this.log.silly('IoService', 'initWebSocket() with token:[%s]', this.token)
 
     if (this.online()) {
       this.log.warn('IoService', 'initWebSocket() there already has a live websocket. will go ahead and overwrite it')
@@ -157,21 +157,21 @@ export class IoService {
   }
 
   private wsClose() {
-    this.log.verbose('IoService', 'wsClose()')
+    this.log.silly('IoService', 'wsClose()')
 
     this.websocket.close()
     // this.websocket = null
   }
 
   private wsSend(e: IoEvent) {
-    this.log.verbose('IoService', 'wsSend(%s)', e.name)
+    this.log.silly('IoService', 'wsSend(%s)', e.name)
 
     const message = JSON.stringify(e)
 
     if (this.online()) {
       // 1. check buffer for send old ones
       while (this.sendBuffer.length) {
-        this.log.verbose('IoService', 'wsSend() buffer processing: length: %d', this.sendBuffer.length)
+        this.log.silly('IoService', 'wsSend() buffer processing: length: %d', this.sendBuffer.length)
 
         let m = this.sendBuffer.shift()
         this.websocket.send(m)
@@ -181,16 +181,16 @@ export class IoService {
 
     } else { // 3. buffer this message for future retry
       this.sendBuffer.push(message)
-      this.log.verbose('IoService', 'wsSend() without WebSocket.OPEN, buf len: %d', this.sendBuffer.length)
+      this.log.silly('IoService', 'wsSend() without WebSocket.OPEN, buf len: %d', this.sendBuffer.length)
     }
   }
 
 }
 
 function onOpen(e) {
-  this.log.verbose('IoService', 'onOpen()')
+  this.log.silly('IoService', 'onOpen()')
 
-  this.log.verbose('IoService', 'onOpen() require update from io')
+  this.log.silly('IoService', 'onOpen() require update from io')
   const ioEvent: IoEvent = {
     name: 'update'
     , payload: 'onOpen'
@@ -202,7 +202,7 @@ function onOpen(e) {
  * reconnect inside onClose
  */
 function onClose(e) {
-  this.log.verbose('IoService', 'onClose(%s)', e)
+  this.log.silly('IoService', 'onClose(%s)', e)
 
   // this.websocket = null
   if (this.autoReconnect) {
@@ -229,7 +229,7 @@ function onError(e) {
 function onMessage(message)
 {
   const data = message.data // WebSocket data
-  this.log.verbose('IoService', 'onMessage(%s)', data)
+  this.log.silly('IoService', 'onMessage(%s)', data)
 
   let ioEvent: IoEvent = {
     name: 'raw'

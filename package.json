@@ -11,6 +11,7 @@
     "lint": "tslint src/**/*.ts",
     "pretest": "webdriver-manager update",
     "test": "npm lint && npm run unit && npm run e2e",
+    
     "posttest": "",
     "unit": "jasmine --version",
     "pree2e": "npm start",
