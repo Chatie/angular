@@ -36,7 +36,7 @@
   "homepage": "https://github.com/zixia/wechaty-angular-core#readme",
   "devDependencies": {
     "jasmine": "^2.4.1",
-    "jasmine-spec-reporter": "^2.5.0",
+    "jasmine-spec-reporter": "^3.0.0",
     "lite-server": "^2.2.2",
     "protractor": "^4.0.2",
     "ts-node": "^2.0.0",
