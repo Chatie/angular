@@ -45,7 +45,7 @@
     "typings": "^2.0.0"
   },
   "dependencies": {
-    "brolog": "^0.3.6"
+    "brolog": "^0.4.1"
   },
   "files": [
     "package.json",
