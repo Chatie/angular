@@ -1,7 +1,7 @@
 # wechaty-angular-core
 Wechaty Core Web Component for Angular (WechatyCoreCmp)
 
-This package is part of [Wechaty](https://github.com/zixia/wechaty): https://www.wechaty.io
+This package is part of [Wechaty](https://github.com/chatie/wechaty): https://www.chatie.io
 
 # TL;DR;
 
@@ -27,14 +27,14 @@ Moer details, see code. ;-]
 Version History
 -----------------
 
-## v0.0.1 (master)
+## v0.0.1 Jul 2016
 
 1. Modulized Angular Component: `wechaty-core`
-1. Support all(and same) IO Events of [Wechaty](https://github.com/zixia/wechaty)
+1. Support all(and same) IO Events of [Wechaty](https://github.com/chatie/wechaty)
 
 Known Issues & Support
 -----------------
-Github Issue - https://github.com/zixia/wechaty-angular-core/issues
+Github Issue - https://github.com/chatie/angular/issues
 
 Author
 -----------------
