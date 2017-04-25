@@ -37,7 +37,7 @@ export class WechatyAppCmp {
     this.log.info('WechatyAppCmp', 'onEvent(%s, %s)', name, data)
     this.lastEvents[name] = { data, timestamp: new Date() }
     this.eventNameList = Object.keys(this.lastEvents).sort((a, b) => {
-      return this.lastEvents[b].timestamp - (this.lastEvents[a].timestamp || 0) 
+      return this.lastEvents[b].timestamp - (this.lastEvents[a].timestamp || 0)
     })
   }
 }

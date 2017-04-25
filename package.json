@@ -1,5 +1,5 @@
 {
-  "name": "wechaty-angular-core",
+  "name": "@chatie/angular",
   "version": "0.0.1",
   "description": "Wechaty Core Web Component for Angular",
   "main": "index.ts",
@@ -7,11 +7,9 @@
     "start": "lite-server start& echo $! > server.pid",
     "start:fg": "lite-server start",
     "stop": "kill $(cat server.pid)",
-    "postinstall": "typings install",
     "lint": "tslint src/**/*.ts",
     "pretest": "webdriver-manager update",
     "test": "npm lint && npm run unit && npm run e2e",
-    
     "posttest": "",
     "unit": "jasmine --version",
     "pree2e": "npm start",
@@ -20,29 +18,29 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zixia/wechaty-angular-core.git"
+    "url": "git+https://github.com/chatie/angular.git"
   },
   "keywords": [
     "wechaty",
-    "wechaty-angular",
-    "WechatyCoreCmp",
-    "wechaty-core"
+    "chatie",
+    "chatbot"
   ],
-  "author": "Zhuohuan LI <zixia@zixia.net>",
+  "author": "Huan LI <zixia@zixia.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zixia/wechaty-angular-core/issues"
+    "url": "https://github.com/chatie/angular/issues"
   },
-  "homepage": "https://github.com/zixia/wechaty-angular-core#readme",
+  "homepage": "https://github.com/chatie/angular#readme",
   "devDependencies": {
+    "@angular/core": "^4.0.3",
     "jasmine": "^2.4.1",
     "jasmine-spec-reporter": "^3.0.0",
     "lite-server": "^2.2.2",
     "protractor": "^4.0.2",
+    "rxjs": "^5.3.0",
     "ts-node": "^2.0.0",
     "tslint": "^4.0.2",
-    "typescript": "^2.0.0",
-    "typings": "^2.0.0"
+    "typescript": "^2.0.0"
   },
   "dependencies": {
     "brolog": "^0.4.1"

@@ -1,1 +1,1 @@
-export * from './src/wechaty-core.component/index'
+export * from './src/wechaty-core.cmp/'

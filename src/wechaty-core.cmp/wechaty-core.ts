@@ -58,18 +58,18 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
 
   counter = 0
   timestamp = new Date()
-  
+
   /**
-   * 
+   *
    * Constructor
-   * 
+   *
    */
   constructor(
-    private log: Brolog
-    , private injector: Injector
+    private log: Brolog,
+    private injector: Injector,
   ) {
     this.log.silly('WechatyCoreCmp', 'constructor()')
-    // TBD: how to do import version from json file in browser with typescript? 
+    // TBD: how to do import version from json file in browser with typescript?
     // this.npmVersion = require('../package.json').version
 
     this.ioService = new IoService(injector)
@@ -95,7 +95,7 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
       this.ioSubscription.unsubscribe()
       this.ioSubscription = null
     }
-    
+
     this.ioService.stop()
     this.ioService = null
   }
@@ -176,7 +176,7 @@ export class WechatyCoreCmp implements OnInit, OnDestroy {
         .next(shutdownEvent)
   }
 
-  logoff(reason?: string) { // use the name `logoff` here to prevent conflict with @Output(logout) 
+  logoff(reason?: string) { // use the name `logoff` here to prevent conflict with @Output(logout)
     this.log.silly('WechatyCoreCmp', 'logoff(%s)', reason)
 
     const quitEvent: IoEvent = {
