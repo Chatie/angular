@@ -23,6 +23,10 @@ Let's see code example:
 
 Moer details, see code. ;-]
 
+# Reference
+
+* [How to build and publish an Angular module](https://medium.com/@cyrilletuzi/how-to-build-and-publish-an-angular-module-7ad19c0b4464)
+* [Understanding Angular modules (NgModule) and their scopes](https://medium.com/@cyrilletuzi/understanding-angular-modules-ngmodule-and-their-scopes-81e4ed6f7407)
 
 Version History
 -----------------
