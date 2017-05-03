@@ -1,6 +1,6 @@
 {
   "name": "@chatie/angular",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Chatie Web Component for Angular",
   "license": "Apache-2.0",
   "scripts": {
