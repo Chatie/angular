@@ -42,8 +42,9 @@ export interface UserInfo {
   // tslint:disable-next-line:component-selector
   selector: 'wechaty',
   // moduleId: module.id,
-  styleUrls: ['./wechaty.component.css'],
-  templateUrl: './wechaty.component.html',
+  // styleUrls: ['./wechaty.component.css'],
+  // templateUrl: './wechaty.component.html',
+  template: '<ng-content></ng-content>',
 })
 export class WechatyComponent implements OnInit, OnDestroy {
   @Output() message   = new EventEmitter<string>()

@@ -16,4 +16,4 @@ import { WechatyComponent } from './wechaty.component'
 })
 export class WechatyModule {}
 
-export * from './wechaty.component'
+export { WechatyComponent } from './wechaty.component'
