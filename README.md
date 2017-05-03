@@ -1,24 +1,25 @@
-# wechaty-angular-core
+# @chatie/angular
+
 Wechaty Core Web Component for Angular (WechatyCoreCmp)
 
-This package is part of [Wechaty](https://github.com/chatie/wechaty): https://www.chatie.io
+This package is part of [Chatie](https://github.com/chatie) Project: https://www.chatie.io
 
 # TL;DR;
 
 Let's see code example:
 
 ```html
-<wechaty-core 
+<wechaty
   #wechaty
   token="WECHATY_TOKEN"
-  
+
   (scan)      = "onEvent('scan'      , $event)"
   (login)     = "onEvent('login'     , $event)"
 >
 
   <button (click)="wechaty.logoff()">   Logoff</button>
 
-</wechaty-core>
+</wechaty>
 ```
 
 Moer details, see code. ;-]
