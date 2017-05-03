@@ -1,26 +1,30 @@
-import {
-  beforeEach, beforeEachProviders,
-  describe, xdescribe,
-  expect, it, xit,
-  async, inject
-} from '@angular/core/testing'
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Brolog } from 'brolog'
 
-import { WechatyCoreCmp } from './wechaty-core'
+import { WechatyComponent } from './wechaty.component';
 
-beforeEachProviders(() => [WechatyCoreCmp, Brolog])
+describe('WechatyComponent', () => {
+  let component: WechatyComponent;
+  let fixture: ComponentFixture<WechatyComponent>;
 
-describe('WechatyCoreCmp Test', () => {
-  it('should create the app'
-    , inject([WechatyCoreCmp], (wechaty: WechatyCoreCmp) => {
-      expect(wechaty).toBeTruthy()
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ WechatyComponent ],
+      providers: [
+        Brolog,
+      ]
     })
-  )
+    .compileComponents();
+  }));
 
-  it('should have as content "app works!"',
-    inject([WechatyCoreCmp], (wechaty: WechatyCoreCmp) => {
-      expect(wechaty.token).toEqual('')
-    })
-  )
-})
+  beforeEach(() => {
+    fixture = TestBed.createComponent(WechatyComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

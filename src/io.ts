@@ -1,33 +1,35 @@
+// Io Service should be instanciated each time. (one io service for one wechaty component)
+// import { Injectable } from '@angular/core';
+// @Injectable()
+
 import {
   Injector
-} from '@angular/core'
+}                         from '@angular/core'
 
 import {
-  Observable
-  , Subscriber
-  , Subject
-} from 'rxjs/Rx'
+  Observable,
+  Subscriber,
+  Subject,
+}                         from 'rxjs/Rx'
 
-import { Brolog } from 'brolog'
+import { Brolog }         from 'brolog'
 
-export type WechatyEventName = 
-  'heartbeat'
+export type WechatyEventName =
+  'scan'
   | 'login' | 'logout'
   | 'reset' | 'shutdown'
   | 'ding'  | 'dong'
-  | 'scan'  | 'message'
+  | 'message'
+  | 'heartbeat'
   | 'update'
   | 'error'
 
-export type ServerEventName = 
+export type ServerEventName =
   'sys'
 
 export type IoEventName = 'raw' | WechatyEventName | ServerEventName
 
-/**
- * Io Event Interface
- */
-export interface IoEvent { 
+export interface IoEvent {
   name: IoEventName
   payload: any
 }
@@ -35,28 +37,25 @@ export interface IoEvent {
 export class IoService {
   private ENDPOINT = 'wss://api.wechaty.io/v0/websocket/token/'
   private PROTOCOL = 'web|0.0.1'
-  private token: string
 
-  private websocket: WebSocket
-  private subscriber: Subscriber<IoEvent>
-  private ioSubject: Subject<IoEvent>
+  public websocket: WebSocket | null
+  public subscriber: Subscriber<IoEvent>
+  public ioSubject: Subject<IoEvent>
   private sendBuffer: string[] = []
 
-  private log = this.injector.get(Brolog)
+  public log = Brolog.instance()
+  private token: string
 
-  private autoReconnect = true
+  public autoReconnect = true
 
   constructor(
-    private injector: Injector
+    private injector: Injector,
    ) {
-    this.log.silly('IoService', 'constructor()')
+    this.log.verbose('IoService', 'constructor()')
+    // console.log(injector)
   }
 
-  io() {
-    return this.ioSubject
-  }
-
-  setToken(token: string) {
+  public setToken(token: string) {
     this.log.silly('IoService', 'setToken(%s)', token)
     this.token = token
   }
@@ -79,13 +78,16 @@ export class IoService {
   }
 
   stop(): Promise<IoService> {
-    this.log.silly('IoService', 'stop()')
+    this.log.verbose('IoService', 'stop()')
 
     this.autoReconnect = false
 
-    this.websocket && this.websocket.close(1000, 'IoService.stop()')
-    this.ioSubject && this.ioSubject.unsubscribe()
-
+    if (this.websocket) {
+      this.websocket.close(1000, 'IoService.stop()')
+    }
+    if (this.ioSubject) {
+      this.ioSubject.unsubscribe()
+    }
     return Promise.resolve(this)
   }
 
@@ -94,29 +96,12 @@ export class IoService {
     return this.stop().then(_ => this.start())
   }
 
-  ding(payload) {
-    this.log.silly('IoService', 'ding(%s)', payload)
-
-    const e: IoEvent = {
-      name: 'ding'
-      , payload
-    }
-    this.io().next(e)
-  }
-
-  online(): boolean {
-    return this.websocket && (this.websocket.readyState === WebSocket.OPEN)
-  }
-  connecting(): boolean {
-    return this.websocket && (this.websocket.readyState === WebSocket.CONNECTING)
-  }
-
-  private initIoSubject() {
-    this.log.silly('IoService', 'initIoSubject()')
+  initIoSubject() {
+    this.log.verbose('IoService', 'initIoSubject()')
 
     return new Promise(resolve => {
-      const observable = Observable.create(subscriber => {
-        this.log.silly('IoService', 'initIoSubject() Observable.create()')
+      const observable = Observable.create((subscriber: any) => {
+        this.log.verbose('IoService', 'initIoSubject() Observable.create()')
         this.subscriber = subscriber
 
         ////////////////////////
@@ -135,7 +120,7 @@ export class IoService {
     })
   }
 
-  private initWebSocket() {
+  public initWebSocket() {
     this.log.silly('IoService', 'initWebSocket() with token:[%s]', this.token)
 
     if (this.online()) {
@@ -152,15 +137,48 @@ export class IoService {
     this.websocket.onmessage = onMessage.bind(this)
   }
 
-  private endPoint(): string {
-    return this.ENDPOINT + this.token
+  online(): boolean {
+    if (this.websocket && (this.websocket.readyState === WebSocket.OPEN)) {
+      return true
+    }
+    return false
+  }
+  connecting(): boolean {
+    if (this.websocket && (this.websocket.readyState === WebSocket.CONNECTING)) {
+      return true
+    }
+    return false
   }
 
-  private wsClose() {
-    this.log.silly('IoService', 'wsClose()')
+  io() {
+    return this.ioSubject
+  }
 
-    this.websocket.close()
-    // this.websocket = null
+  private endPoint(): string {
+    const END_POINT = 'wss://api.chatie.io/websocket/token/'
+
+    const url = END_POINT + this.token
+    this.log.verbose('IoService', 'endPoint() => %s', url)
+    return url
+  }
+
+  ding(payload: any) {
+    this.log.verbose('IoService', 'ding(%s)', payload)
+
+    const e: IoEvent = {
+      name: 'ding'
+      , payload
+    }
+    this.io().next(e)
+  }
+
+  wsClose() {
+    this.log.verbose('IoService', 'wsClose()')
+
+    if (this.websocket) {
+      this.websocket.close()
+      this.websocket = null
+    }
   }
 
   private wsSend(e: IoEvent) {
@@ -169,11 +187,14 @@ export class IoService {
     const message = JSON.stringify(e)
 
     if (this.online()) {
+      if (!this.websocket) {
+        throw new Error('no websocket')
+      }
       // 1. check buffer for send old ones
       while (this.sendBuffer.length) {
         this.log.silly('IoService', 'wsSend() buffer processing: length: %d', this.sendBuffer.length)
 
-        let m = this.sendBuffer.shift()
+        const m = this.sendBuffer.shift()
         this.websocket.send(m)
       }
       // 2. send this one
@@ -184,13 +205,12 @@ export class IoService {
       this.log.silly('IoService', 'wsSend() without WebSocket.OPEN, buf len: %d', this.sendBuffer.length)
     }
   }
-
 }
 
-function onOpen(e) {
-  this.log.silly('IoService', 'onOpen()')
+function onOpen(this: IoService, e: any) {
+  this.log.verbose('IoService', 'onOpen()')
 
-  this.log.silly('IoService', 'onOpen() require update from io')
+  this.log.verbose('IoService', 'onOpen() require update from io')
   const ioEvent: IoEvent = {
     name: 'update'
     , payload: 'onOpen'
@@ -201,8 +221,8 @@ function onOpen(e) {
 /**
  * reconnect inside onClose
  */
-function onClose(e) {
-  this.log.silly('IoService', 'onClose(%s)', e)
+function onClose(this: IoService, e: any) {
+  this.log.verbose('IoService', 'onClose(%s)', e)
 
   // this.websocket = null
   if (this.autoReconnect) {
@@ -210,13 +230,13 @@ function onClose(e) {
       this.initWebSocket()
     }, 1000)
   }
-  
+
   if (!e.wasClean) {
     // console.warn('IoService.onClose: e.wasClean FALSE')
   }
 }
 
-function onError(e) {
+function onError(this: IoService, e: any) {
   this.log.silly('IoService', 'onError(%s)', e)
   this.websocket = null
 }
@@ -226,12 +246,11 @@ function onError(e) {
  * this: Subscriber
  *
  */
-function onMessage(message)
-{
+function onMessage(this: IoService, message: any) {
   const data = message.data // WebSocket data
-  this.log.silly('IoService', 'onMessage(%s)', data)
+  this.log.verbose('IoService', 'onMessage(%s)', data)
 
-  let ioEvent: IoEvent = {
+  const ioEvent: IoEvent = {
     name: 'raw'
     , payload: data
   } // this is default io event for unknown format message
