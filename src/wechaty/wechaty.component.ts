@@ -64,7 +64,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
 
   private ioService: IoService
 
-  private npmVersion: string = 'TODO: support version'
+  private npmVersion = 'TODO: support version'
 
   counter = 0
   timestamp = new Date()

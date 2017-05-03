@@ -7,8 +7,11 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
+    "test": "npm run lint && npm run ngtest:single && npm run e2e",
+    "ngtest:single": "ng test --single-run",
+    "lint": "npm run tslint && npm run nglint",
+    "nglint": "ng lint",
+    "tslint": "tslint src/**/*.ts && tsc --noEmit",
     "e2e": "ng e2e"
   },
   "repository": {

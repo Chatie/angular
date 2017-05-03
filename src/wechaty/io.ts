@@ -63,7 +63,7 @@ export class IoService {
   start(): Promise<IoService> {
     this.log.silly('IoService', 'start() with token:[%s]', this.token)
 
-    if (!this.token){
+    if (!this.token) {
       this.log.warn('IoService', 'start() without valid token:[%s]', this.token)
     }
     this.autoReconnect = true
