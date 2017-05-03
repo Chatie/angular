@@ -1,6 +1,6 @@
 {
   "name": "@chatie/angular",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Chatie Web Component NgModule for Angular",
   "license": "Apache-2.0",
   "scripts": {
@@ -29,8 +29,7 @@
   },
   "homepage": "https://github.com/chatie/angular#readme",
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@angular/common": "^4.1",
     "@angular/compiler": "^4.1",
