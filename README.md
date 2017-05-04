@@ -8,7 +8,7 @@ This package is part of Chatie project: <https://github.com/chatie>
 
 ![Angular Library](http://www.dzurico.com/wp-content/uploads/2016/12/library-in-angular.jpg)
 
-> Photo credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
+> Picture credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
 
 # TL;DR;
 

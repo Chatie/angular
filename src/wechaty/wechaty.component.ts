@@ -64,7 +64,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
   @Output() error     = new EventEmitter<Error>()
   @Output() heartbeat = new EventEmitter<any>()
 
-  @Input() set token(token: string) { this.updateToken(token) }
+  @Input() set token(token: string | null) { this.updateToken(token || '') }
   get token() { return this._token }
   private _token: string
 
