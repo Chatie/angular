@@ -34,7 +34,8 @@
     "./polyfills.ts"
   ],
   "angularCompilerOptions": {
-    "skipTemplateCodegen": true
+      "strictMetadataEmit": true
+    , "skipTemplateCodegen": true
     // , "debug": true
     // , "genDir": "../aot/"
     // , "skipMetadataEmit" : false
