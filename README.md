@@ -14,6 +14,27 @@ This package is part of Chatie project: <https://github.com/chatie>
 
 Let's see code example:
 
+### Module
+
+```ts
+import { Brolog }         from 'brolog'
+import { WechatyModule }  from '@chatie/angular'
+
+@NgModule({
+  ...
+  imports: [
+    WechatyModule,
+  ],
+  providers: [
+    Brolog,
+  ],
+  ...
+})
+
+```
+
+### Html Component
+
 ```html
 <wechaty
   #wechaty
