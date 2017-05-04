@@ -10,7 +10,7 @@ This package is part of Chatie project: <https://github.com/chatie>
 
 > Picture credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
 
-# TL;DR;
+## TL;DR;
 
 Let's see code example:
 
@@ -47,7 +47,7 @@ import { WechatyModule }  from '@chatie/angular'
 
 Moer details, see code. ;-]
 
-# Reference
+## Reference
 
 * [How to build and publish an Angular module](https://medium.com/@cyrilletuzi/how-to-build-and-publish-an-angular-module-7ad19c0b4464)
 * [Understanding Angular modules (NgModule) and their scopes](https://medium.com/@cyrilletuzi/understanding-angular-modules-ngmodule-and-their-scopes-81e4ed6f7407)
@@ -60,33 +60,32 @@ Moer details, see code. ;-]
 
 * [Working with scoped packages](https://docs.npmjs.com/getting-started/scoped-packages)
 
-Version History
------------------
+## Version History
 
-## v0.1.0 (May 2017)
+### v0.1.0 (May 2017)
 
 1. Upgrade Angular 4.1
 1. NgModule-ize Wachaty Component
 
-## v0.0.1 (Jul 2016)
+### v0.0.1 (Jul 2016)
 
 1. Modulized Angular 2 Component: `wechaty-core`
 1. Support all(and same) IO Events of [Wechaty](https://github.com/chatie/wechaty)
 
-Known Issues & Support
------------------
+## Known Issues & Support
+
 Github Issue - https://github.com/chatie/angular/issues
 
-Author
------------------
+## Author
+
 Zhuohuan LI <zixia@zixia.net> (http://linkedin.com/in/zixia)
 
 <a href="http://stackoverflow.com/users/1123955/zixia">
   <img src="http://stackoverflow.com/users/flair/1123955.png" width="208" height="58" alt="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
 </a>
 
-Copyright & License
--------------------
-* Code & Docs 2016© zixia
+## Copyright & License
+
+* Code & Docs ©2016-2017 zixia
 * Code released under the MIT license
 * Docs released under Creative Commons
