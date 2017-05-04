@@ -17,16 +17,12 @@ Let's see code example:
 ### App Module
 
 ```ts
-import { Brolog }         from 'brolog'
 import { WechatyModule }  from '@chatie/angular'
 
 @NgModule({
   ...
   imports: [
     WechatyModule,
-  ],
-  providers: [
-    Brolog,
   ],
   ...
 })
