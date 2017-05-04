@@ -18,8 +18,8 @@
     "e2e": "ng e2e",
     "dist": "npm run clean && npm run ngc && npm run rollup && npm run es5 && npm run minify",
     "rollup": "rollup -c",
-    "minify": "uglifyjs dist/wechaty.es5.umd.js --screw-ie8 --compress --mangle --comments --output dist/wechaty.es5.umd.min.js",
-    "es5": "tsc --out ./dist/wechaty.es5.umd.js --target es5 --allowJs dist/wechaty.es6.umd.js --lib es6,dom",
+    "minify": "uglifyjs dist/wechaty.umd.js --screw-ie8 --compress --mangle --comments --output dist/wechaty.umd.min.js",
+    "es5": "tsc --out ./dist/wechaty.umd.js --target es5 --allowJs dist/wechaty.es6.umd.js --lib es6,dom",
     "ngc": "ngc -p src/tsconfig.aot.json"
   },
   "repository": {
