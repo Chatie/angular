@@ -4,13 +4,15 @@
 
 Chatie Web Component NgModule for Angular 4
 
-This package is part of Chatie project: <https://github.com/chatie>
-
 ![Angular Library](http://www.dzurico.com/wp-content/uploads/2016/12/library-in-angular.jpg)
 
 > Picture credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
 
 ## TL;DR
+
+### Demo
+
+<http://chatie.github.io/angular/>
 
 Talk is cheap, show me the code:
 
@@ -55,6 +57,7 @@ Moer details, see code. ;-]
 * [Getting your Angular 2 library ready for AoT](https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad)
 * [Documentation for Angular Metadata Raw](https://gist.github.com/chuckjaz/65dcc2fd5f4f5463e492ed0cb93bca60)
 * [Ahead-of-Time Compilation in Angular](http://blog.mgechev.com/2016/08/14/ahead-of-time-compilation-angular-offline-precompilation/)
+* [Plunker - Adding the embed to your website](https://ggoodman.gitbooks.io/plunker/content/embed.html)
 
 ### NPM
 
