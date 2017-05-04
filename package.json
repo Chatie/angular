@@ -6,7 +6,7 @@
   "main": "dist/wechaty.module.js",
   "types": "dist/wechaty.module.d.ts",
   "scripts": {
-    "clean": "shx rm -fr dist/",
+    "clean": "shx rm -fr dist/*",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -61,6 +61,7 @@
     "protractor": "~5.1.0",
     "rollup": "^0.41.6",
     "rxjs": "^5.3",
+    "shx": "^0.2.2",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
     "typescript": "^2.3.2",
