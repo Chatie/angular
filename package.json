@@ -47,7 +47,7 @@
     "@angular/platform-browser-dynamic": "^4.1",
     "@angular/router": "^4.1",
     "@types/jasmine": "2.5.38",
-    "@types/node": "~6.0.60",
+    "@types/node": "^6.0.72",
     "brolog": "^1.0.15",
     "codelyzer": "~2.0.0",
     "core-js": "^2.4.1",

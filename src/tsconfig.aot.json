@@ -5,7 +5,9 @@
     "target": "es5",
     "module": "es2015",
     "baseUrl": "",
-    "types": [],
+    "types": [
+      "node"
+    ],
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
