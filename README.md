@@ -6,6 +6,10 @@ Wechaty Web Component NgModule for Angular 4
 
 This package is part of [Chatie](https://github.com/chatie) Project: https://www.chatie.io
 
+![Angular Library](http://www.dzurico.com/wp-content/uploads/2016/12/library-in-angular.jpg)
+
+> Credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
+
 # TL;DR;
 
 Let's see code example:

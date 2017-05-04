@@ -1,12 +1,13 @@
 import { NgModule }         from '@angular/core'
-import { CommonModule }     from '@angular/common'
+// import { CommonModule }     from '@angular/common'
 
 import { WechatyComponent } from './wechaty.component'
 
 @NgModule({
-  imports: [
-    CommonModule,
-  ],
+  id: 'wechaty',
+  // imports: [
+  //   CommonModule,
+  // ],
   declarations: [
     WechatyComponent,
   ],

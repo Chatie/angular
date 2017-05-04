@@ -38,13 +38,19 @@ export interface UserInfo {
   signature: string
 }
 
+/**
+ * http://localhost:4200/app.component.html 404 (Not Found)
+ * zone.js:344 Unhandled Promise rejection: Failed to load app.component.html
+ * https://github.com/angular/angular-cli/issues/2592#issuecomment-266635266
+ * https://github.com/angular/angular-cli/issues/2293
+ */
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'wechaty',
   // moduleId: module.id,
-  // styleUrls: ['./wechaty.component.css'],
-  // templateUrl: './wechaty.component.html',
-  template: '<ng-content></ng-content>',
+  styleUrls: ['./wechaty.component.css'],
+  templateUrl: './wechaty.component.html',
+  // template: '<ng-content></ng-content>',
 })
 export class WechatyComponent implements OnInit, OnDestroy {
   @Output() message   = new EventEmitter<string>()

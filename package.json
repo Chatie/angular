@@ -3,17 +3,21 @@
   "version": "0.1.2",
   "description": "Chatie Web Component NgModule for Angular",
   "license": "Apache-2.0",
+  "main": "dist/wechaty.module.js",
+  "types": "dist/wechaty.module.d.ts",
   "scripts": {
     "clean": "shx rm -fr dist/",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "npm run clean && npm run lint && npm run ngtest:single && npm run e2e",
+    "test": "npm run clean && npm run lint && npm run ngtest && npm run e2e",
     "ngtest": "ng test --single-run",
     "lint": "npm run tslint && npm run nglint",
     "nglint": "ng lint",
     "tslint": "tslint src/**/*.ts && tsc --noEmit",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build:module": "npm run clean && npm run ngc",
+    "ngc": "ngc -p src/tsconfig.aot.json"
   },
   "repository": {
     "type": "git",
@@ -65,6 +69,7 @@
     "zone.js": "^0.8.4"
   },
   "files": [
+    "dist/",
     "package.json",
     "README.md",
     "CHANGELOG.md",
