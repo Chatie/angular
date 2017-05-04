@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../dist",
-    "target": "es5",
+    "target": "es6",
     "module": "es2015",
     "baseUrl": "",
     "types": [
@@ -35,9 +35,9 @@
   ],
   "angularCompilerOptions": {
       "strictMetadataEmit": true
-    , "skipTemplateCodegen": true
+    , "skipTemplateCodegen": false
+    , "genDir": "../aot/"
     // , "debug": true
-    // , "genDir": "../aot/"
     // , "skipMetadataEmit" : false
 
   }

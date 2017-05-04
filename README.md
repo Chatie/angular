@@ -10,9 +10,9 @@ This package is part of Chatie project: <https://github.com/chatie>
 
 > Picture credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
 
-## TL;DR;
+## TL;DR
 
-Let's see code example:
+Talk is cheap, show me the code:
 
 ### App Module
 
