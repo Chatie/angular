@@ -33,7 +33,6 @@
     "url": "https://github.com/chatie/angular/issues"
   },
   "homepage": "https://github.com/chatie/angular#readme",
-  "private": true,
   "dependencies": {},
   "devDependencies": {
     "@angular/cli": "1.0.1",
