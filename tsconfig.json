@@ -17,4 +17,8 @@
       "dom"
     ]
   }
+  , "exclude": [
+      "aot/"
+    , "node_modules/"
+  ]
 }
