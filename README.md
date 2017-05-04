@@ -14,7 +14,7 @@ This package is part of Chatie project: <https://github.com/chatie>
 
 Let's see code example:
 
-### Module
+### App Module
 
 ```ts
 import { Brolog }         from 'brolog'
