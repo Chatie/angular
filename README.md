@@ -4,11 +4,11 @@
 
 Wechaty Web Component NgModule for Angular 4
 
-This package is part of [Chatie](https://github.com/chatie) Project: https://www.chatie.io
+This package is part of Chatie project: <https://github.com/chatie>
 
 ![Angular Library](http://www.dzurico.com/wp-content/uploads/2016/12/library-in-angular.jpg)
 
-> Credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
+> Photo credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
 
 # TL;DR;
 
@@ -37,6 +37,10 @@ Moer details, see code. ;-]
 * [Making your Angular 2 library statically analyzable for AoT](https://medium.com/@isaacplmann/making-your-angular-2-library-statically-analyzable-for-aot-e1c6f3ebedd5)
 * [Getting your Angular 2 library ready for AoT](https://medium.com/@isaacplmann/getting-your-angular-2-library-ready-for-aot-90d1347bcad)
 * [Documentation for Angular Metadata Raw](https://gist.github.com/chuckjaz/65dcc2fd5f4f5463e492ed0cb93bca60)
+
+### NPM
+
+* [Working with scoped packages](https://docs.npmjs.com/getting-started/scoped-packages)
 
 Version History
 -----------------
