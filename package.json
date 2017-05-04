@@ -10,13 +10,13 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "npm run clean && npm run lint && npm run ngtest && npm run e2e",
+    "test": "npm run lint && npm run ngtest && npm run e2e",
     "ngtest": "ng test --single-run",
     "lint": "npm run tslint && npm run nglint",
     "nglint": "ng lint",
     "tslint": "tslint src/**/*.ts && tsc --noEmit",
     "e2e": "ng e2e",
-    "build:module": "npm run clean && npm run ngc",
+    "dist": "npm run clean && npm run ngc",
     "ngc": "ngc -p src/tsconfig.aot.json"
   },
   "repository": {

@@ -26,3 +26,26 @@ branches:
 cache:
   directories:
     - node_modules
+
+script:
+  - echo $TRAVIS_OS_NAME
+  - node --version
+  - npm --version
+  - npm run lint
+  - npm run dist
+  - npm test
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+before_deploy:
+  - npm version
+  - npm run dist
+
+deploy:
+  provider: npm
+  email: dev@chatie.io
+  api_key: "$NPM_TOKEN"
+  skip_cleanup: true
