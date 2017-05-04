@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Chatie/angular.svg?branch=master)](https://travis-ci.org/Chatie/angular) [![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular)
 
-Wechaty Web Component NgModule for Angular 4
+Chatie Web Component NgModule for Angular 4
 
 This package is part of Chatie project: <https://github.com/chatie>
 
