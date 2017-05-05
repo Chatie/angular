@@ -100,7 +100,11 @@ export class IoService {
   }
 
   /**
-   * https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/subject.md
+   * Creates a subject from the specified observer and observable.
+   *  - https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/subject.md
+   * Create an Rx.Subject using Subject.create that allows onNext without subscription
+   *   A socket implementation (example, don't use)
+   *  - http://stackoverflow.com/a/34862286/1123955
    */
   async initRxSocket(): Promise<void> {
     this.log.verbose('IoService', 'initRxSocket()')
