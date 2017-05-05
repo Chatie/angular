@@ -2,17 +2,17 @@
 // import { Injectable } from '@angular/core';
 // @Injectable()
 
-import {
-  Injector
-}                         from '@angular/core'
+// import {
+//   Injector
+// }                  from '@angular/core'
 
 import {
   Observable,
   Subscriber,
   Subject,
-}                         from 'rxjs/Rx'
+}                  from 'rxjs/Rx'
 
-import { Brolog }         from 'brolog'
+import { Brolog }  from 'brolog'
 
 export type WechatyEventName =
   'scan'
@@ -46,13 +46,13 @@ export class IoService {
   public log = Brolog.instance()
   private token: string
 
+  private readonly version = require('../../package.json').version
+
   public autoReconnect = true
 
   constructor(
-    private injector: Injector,
    ) {
-    this.log.verbose('IoService', 'constructor()')
-    // console.log(injector)
+    this.log.verbose('IoService', 'constructor() v%s', this.version)
   }
 
   public setToken(token: string) {

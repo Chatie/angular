@@ -22,7 +22,7 @@ import { AppComponent } from './app.component';
   providers: [
     {
       provide: Brolog,
-      useFactory() { return Brolog.instance() }
+      useFactory() { return Brolog.instance('silly') }
     },
   ],
   bootstrap: [AppComponent]

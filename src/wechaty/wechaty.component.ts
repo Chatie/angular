@@ -1,12 +1,11 @@
 import {
   Component,
-  OnInit,
-  OnDestroy,
   EventEmitter,
   Input,
-  Output,
   NgZone,
-  Injector,
+  Output,
+  OnDestroy,
+  OnInit,
 }                   from '@angular/core'
 
 import {
@@ -18,8 +17,8 @@ import {
 import { Brolog }   from 'brolog'
 
 import {
-  IoService,
   IoEvent,
+  IoService,
 }                   from './io'
 
 /**
@@ -64,7 +63,19 @@ export class WechatyComponent implements OnInit, OnDestroy {
   @Output() error     = new EventEmitter<Error>()
   @Output() heartbeat = new EventEmitter<any>()
 
-  @Input() set token(token: string | null) { this.updateToken(token) }
+  @Input() set token(token: string | null) {
+    this.log.verbose('WechatyComponent', 'set token(%s)', token)
+    if (!token || this._token === token) {
+      return
+    }
+    this._token = token.trim()
+
+    if (!this.ioSubscription) {
+      return
+    }
+    this.ioService.setToken(this._token)
+    this.ioService.restart()
+  }
   get token() { return this._token }
   private _token: string
 
@@ -75,7 +86,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
 
   private ioService: IoService
 
-  private npmVersion = 'TODO: support version'
+  public readonly version = require('../../package.json').version as string
 
   counter = 0
   timestamp = new Date()
@@ -83,16 +94,14 @@ export class WechatyComponent implements OnInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     private log: Brolog,
-    private injector: Injector,
   ) {
-    this.log.verbose('Wechaty', 'constructor()')
-
-    this.ioService = new IoService(this.injector)
+    this.log.verbose('WechatyComponent', 'constructor() v%s', this.version)
   }
 
   ngOnInit() {
-    this.log.verbose('Wechaty', 'ngOninit() with token: ' + this.token)
+    this.log.verbose('WechatyComponent', 'ngOninit() with token: ' + this.token)
 
+    this.ioService = new IoService()
     /**
      * @Input(token) is not inittialized in constructor()
      */
@@ -106,7 +115,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.log.verbose('Wechaty', 'ngOnDestroy()')
+    this.log.verbose('WechatyComponent', 'ngOnDestroy()')
 
     this.endTimer()
 
@@ -122,7 +131,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
   }
 
   onIo(e: IoEvent) {
-    this.log.silly('Wechaty', 'onIo#%d(%s)', this.counter++, e.name)
+    this.log.silly('WechatyComponent', 'onIo#%d(%s)', this.counter++, e.name)
     this.timestamp = new Date()
 
     switch (e.name) {
@@ -152,31 +161,17 @@ export class WechatyComponent implements OnInit, OnDestroy {
         break
 
       case 'sys':
-        this.log.silly('Wechaty', 'onIo(%s): %s', e.name, e.payload)
+        this.log.silly('WechatyComponent', 'onIo(%s): %s', e.name, e.payload)
         break
 
       default:
-        this.log.warn('Wechaty', 'onIo() unknown event name: %s[%s]', e.name, e.payload)
+        this.log.warn('WechatyComponent', 'onIo() unknown event name: %s[%s]', e.name, e.payload)
         break
     }
   }
 
-  private updateToken(token: string | null) {
-    this.log.silly('WechatyCoreCmp', 'set token(%s)', token)
-    if (!token || this._token === token) {
-      return
-    }
-    this._token = token.trim()
-
-    if (!this.ioSubscription) {
-      return
-    }
-    this.ioService.setToken(this._token)
-    this.ioService.restart()
-  }
-
   public reset(reason: string) {
-    this.log.verbose('Wechaty', 'reset(%s)', reason)
+    this.log.verbose('WechatyComponent', 'reset(%s)', reason)
 
     const resetEvent: IoEvent = {
       name: 'reset'
@@ -190,7 +185,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
   }
 
   public shutdown(reason: string) {
-    this.log.verbose('Wechaty', 'shutdown(%s)', reason)
+    this.log.verbose('WechatyComponent', 'shutdown(%s)', reason)
 
     const shutdownEvent: IoEvent = {
       name: 'shutdown'
@@ -204,7 +199,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
   }
 
   startTimer() {
-    this.log.verbose('Wechaty', 'startTimer()')
+    this.log.verbose('WechatyComponent', 'startTimer()')
     this.ender = new Subject()
 
     // https://github.com/angular/protractor/issues/3349#issuecomment-232253059
@@ -230,7 +225,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
   }
 
   endTimer() {
-    this.log.verbose('Wechaty', 'endTimer()')
+    this.log.verbose('WechatyComponent', 'endTimer()')
 
     if (this.timerSub) {
       this.timerSub.unsubscribe()
@@ -245,7 +240,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
   }
 
   logoff(reason?: string) { // use the name `logoff` here to prevent conflict with @Output(logout)
-    this.log.silly('WechatyCoreCmp', 'logoff(%s)', reason)
+    this.log.silly('WechatyComponent', 'logoff(%s)', reason)
 
     const quitEvent: IoEvent = {
       name: 'logout'
@@ -266,6 +261,4 @@ export class WechatyComponent implements OnInit, OnDestroy {
   offline(): boolean {
     return !(this.online() || this.connecting())
   }
-
-  version() { return this.npmVersion}
 }
