@@ -25,8 +25,8 @@ describe('IoService', () => {
   //   expect(service).toBeTruthy();
   // }));
 
-  it('should ...', inject([Injector], (injector: Injector) => {
-    const ioService = new IoService(injector)
+  it('should ...', inject([Injector], () => {
+    const ioService = new IoService()
     expect(ioService).toBeTruthy();
   }));
 
