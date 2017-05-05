@@ -1,14 +1,8 @@
-// Io Service should be instanciated each time. (one io service for one wechaty component)
-// import { Injectable } from '@angular/core';
-// @Injectable()
-
-// import {
-//   Injector
-// }                  from '@angular/core'
+import { version } from '../../package.json'
 
 import {
   Observable,
-  Subscriber,
+  Observer,
   Subject,
 }                  from 'rxjs/Rx'
 
@@ -35,49 +29,50 @@ export interface IoEvent {
 }
 
 export class IoService {
-  private ENDPOINT = 'wss://api.wechaty.io/v0/websocket/token/'
-  private PROTOCOL = 'web|0.0.1'
-
-  public websocket: WebSocket | null
-  public subscriber: Subscriber<IoEvent>
   public ioSubject: Subject<IoEvent>
-  private sendBuffer: string[] = []
-
-  public log = Brolog.instance()
-  private token: string
-
-  private readonly version = require('../../package.json').version
+  public version: string
 
   public autoReconnect = true
+  public log = Brolog.instance()
+  public websocket: WebSocket | null
 
-  constructor(
-   ) {
+  private ENDPOINT = 'wss://api.chatie.io/v0/websocket/token/'
+  private PROTOCOL = 'web|0.0.1'
+
+  private sendBuffer: string[] = []
+
+  private _token: string // FIXME possible be `undefined`
+
+
+  constructor() {
     this.log.verbose('IoService', 'constructor() v%s', this.version)
   }
 
-  public setToken(token: string) {
-    this.log.silly('IoService', 'setToken(%s)', token)
-    this.token = token
+  public token(newToken?: string): string {
+    this.log.silly('IoService', 'setToken(%s)', newToken)
+    if (newToken) {
+      this._token = newToken
+    }
+    return this._token
   }
 
-  start(): Promise<IoService> {
-    this.log.silly('IoService', 'start() with token:[%s]', this.token)
+  async start(): Promise<void> {
+    this.log.silly('IoService', 'start() with token:[%s]', this._token)
 
-    if (!this.token) {
-      this.log.warn('IoService', 'start() without valid token:[%s]', this.token)
+    if (!this._token) {
+      this.log.warn('IoService', 'start() without valid token:[%s]', this._token)
     }
     this.autoReconnect = true
 
-    return this.initIoSubject()
-    .then(_ => this.initWebSocket())
-    .then(_ => this)
-    .catch(e => {
+    try {
+      await this.initRxSocket()
+    } catch (e) {
       this.log.silly('IoService', 'start() exception: %s', e.message)
       throw e
-    })
+    }
   }
 
-  stop(): Promise<IoService> {
+  async stop(): Promise<void> {
     this.log.verbose('IoService', 'stop()')
 
     this.autoReconnect = false
@@ -88,66 +83,144 @@ export class IoService {
     if (this.ioSubject) {
       this.ioSubject.unsubscribe()
     }
-    return Promise.resolve(this)
+
+    return
   }
 
-  restart(): Promise<IoService> {
+  public async restart(): Promise<void> {
     this.log.silly('IoService', 'restart()')
-    return this.stop().then(_ => this.start())
+    try {
+      await this.stop()
+      await this.start()
+    } catch (e) {
+      this.log.error('IoService', 'restart() error:%s', e.message)
+      throw e
+    }
+    return
   }
 
-  initIoSubject() {
-    this.log.verbose('IoService', 'initIoSubject()')
-
-    return new Promise(resolve => {
-      const observable = Observable.create((subscriber: any) => {
-        this.log.verbose('IoService', 'initIoSubject() Observable.create()')
-        this.subscriber = subscriber
-
-        ////////////////////////
-        resolve()
-        ////////////////////////
-
-        return this.wsClose.bind(this)
-      }).share()
-
-      const obs = {
-        complete: this.wsClose.bind(this)
-        , next: this.wsSend.bind(this)
-      }
-
-      this.ioSubject = Subject.create(obs, observable)
-    })
-  }
-
-  public initWebSocket() {
-    this.log.silly('IoService', 'initWebSocket() with token:[%s]', this.token)
+  /**
+   * https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/subject.md
+   */
+  async initRxSocket(): Promise<void> {
+    this.log.verbose('IoService', 'initRxSocket()')
 
     if (this.online()) {
-      this.log.warn('IoService', 'initWebSocket() there already has a live websocket. will go ahead and overwrite it')
+      this.log.warn('IoService', 'initRxSocket() there already has a live websocket. will go ahead and overwrite it')
     }
 
     this.websocket = new WebSocket(this.endPoint(), this.PROTOCOL)
 
-    this.websocket.onerror = onError.bind(this)
-    this.websocket.onopen  = onOpen.bind(this)
-    this.websocket.onclose = onClose.bind(this)
+    // Create observer to handle sending messages
+    const observer: Observer<IoEvent> = {
+      next:     this.wsSend.bind(this),
+      error:    this.wsClose.bind(this),
+      complete: this.wsClose.bind(this),
+    }
 
-    // Handle the payload
-    this.websocket.onmessage = onMessage.bind(this)
+    // Create observable to handle the messages
+    const observable = Observable.create(obs => {
+xx
+        // Handle the payload
+        this.websocket.onmessage = (message: MessageEvent) => {
+          const data = message.data // WebSocket data
+          this.log.verbose('IoService', 'onMessage(%s)', data)
+
+          const ioEvent: IoEvent = {
+            name: 'raw',
+            payload: data,
+          } // this is default io event for unknown format message
+
+          try {
+            const obj = JSON.parse(data)
+            ioEvent.name = obj.name
+            ioEvent.payload = obj.payload
+          } catch (e) {
+            this.log.warn('IoService', 'onMessage parse message fail.')
+          }
+
+          obs.next(ioEvent)
+        }
+
+        this.websocket.onerror = (e) => {
+          this.log.silly('IoService', 'onError(%s)', e)
+          this.websocket = null
+        }
+
+        this.websocket.onclose = (e) => {
+          /**
+           * reconnect inside onClose
+           */
+          this.log.verbose('IoService', 'onClose(%s)', e)
+
+          // this.websocket = null
+          if (this.autoReconnect) {
+            setTimeout(_ => {
+              this.initRxSocket()
+            }, 1000)
+          }
+
+          // if (!e.wasClean) {
+          //   // console.warn('IoService.onClose: e.wasClean FALSE')
+          // }
+        }
+
+        return () => {
+            this.websocket.close()
+        }
+    })
+
+    this.ioSubject = Subject.create(observer, observable)
+
+    return new Promise<void>((resolve, reject) => {
+      const id = setTimeout(() => {
+        reject(new Error('rxSocket connect timeout'))
+      }, 10 * 1000)
+
+      this.websocket.onopen = (e) => {
+        this.log.verbose('IoService', 'onOpen()')
+
+        this.log.verbose('IoService', 'onOpen() require update from io')
+        const ioEvent: IoEvent = {
+          name: 'update'
+          , payload: 'onOpen'
+        }
+        this.ioSubject.next(ioEvent)
+        clearTimeout(id)
+        resolve()
+      }
+    })
+
   }
+
+  // public initWebSocket(): void {
+  //   this.log.silly('IoService', 'initWebSocket() with token:[%s]', this._token)
+
+  //   if (this.online()) {
+  //     this.log.warn('IoService', 'initWebSocket() there already has a live websocket. will go ahead and overwrite it')
+  //   }
+
+  //   this.websocket = new WebSocket(this.endPoint(), this.PROTOCOL)
+
+  //   this.websocket.onerror = onError.bind(this)
+  //   this.websocket.onopen  = onOpen.bind(this)
+  //   this.websocket.onclose = onClose.bind(this)
+
+  //   // Handle the payload
+  //   this.websocket.onmessage = onMessage.bind(this)
+  // }
 
   online(): boolean {
-    if (this.websocket && (this.websocket.readyState === WebSocket.OPEN)) {
-      return true
+    if (!this.websocket) {
+      return false
     }
-    return false
+    return this.websocket.readyState === WebSocket.OPEN
   }
   connecting(): boolean {
-    if (this.websocket && (this.websocket.readyState === WebSocket.CONNECTING)) {
-      return true
+    if (!this.websocket) {
+      return false
     }
-    return false
+    return this.websocket.readyState === WebSocket.CONNECTING
   }
 
   io() {
@@ -155,9 +228,7 @@ export class IoService {
   }
 
   private endPoint(): string {
-    const END_POINT = 'wss://api.chatie.io/websocket/token/'
-
-    const url = END_POINT + this.token
+    const url = this.ENDPOINT + this._token
     this.log.verbose('IoService', 'endPoint() => %s', url)
     return url
   }
@@ -182,7 +253,7 @@ export class IoService {
   }
 
   private wsSend(e: IoEvent) {
-    this.log.silly('IoService', 'wsSend(%s)', e.name)
+    this.log.silly('IoService', 'wsSend({name:%s, payload:%s})', e.name, e.payload)
 
     const message = JSON.stringify(e)
 
@@ -208,60 +279,4 @@ export class IoService {
 }
 
 function onOpen(this: IoService, e: any) {
-  this.log.verbose('IoService', 'onOpen()')
-
-  this.log.verbose('IoService', 'onOpen() require update from io')
-  const ioEvent: IoEvent = {
-    name: 'update'
-    , payload: 'onOpen'
-  }
-  this.ioSubject.next(ioEvent)
-}
-
-/**
- * reconnect inside onClose
- */
-function onClose(this: IoService, e: any) {
-  this.log.verbose('IoService', 'onClose(%s)', e)
-
-  // this.websocket = null
-  if (this.autoReconnect) {
-    setTimeout(_ => {
-      this.initWebSocket()
-    }, 1000)
-  }
-
-  if (!e.wasClean) {
-    // console.warn('IoService.onClose: e.wasClean FALSE')
-  }
-}
-
-function onError(this: IoService, e: any) {
-  this.log.silly('IoService', 'onError(%s)', e)
-  this.websocket = null
-}
-
-/**
- *
- * this: Subscriber
- *
- */
-function onMessage(this: IoService, message: any) {
-  const data = message.data // WebSocket data
-  this.log.verbose('IoService', 'onMessage(%s)', data)
-
-  const ioEvent: IoEvent = {
-    name: 'raw'
-    , payload: data
-  } // this is default io event for unknown format message
-
-  try {
-    const obj = JSON.parse(data)
-    ioEvent.name = obj.name
-    ioEvent.payload = obj.payload
-  } catch (e) {
-    this.log.warn('IoService', 'onMessage parse message fail.')
-  }
-
-  this.subscriber.next(ioEvent)
 }
