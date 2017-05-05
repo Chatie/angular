@@ -1,6 +1,6 @@
 export default {
   entry: 'dist/wechaty.module.js',
-  dest: 'dist/wechaty.es6.umd.js',
+  dest: 'bundles/wechaty.es6.umd.js',
   sourceMap: true,
   format: 'umd',
   moduleName: 'ng.wechaty',

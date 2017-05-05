@@ -3,10 +3,10 @@
   "version": "0.1.17",
   "description": "Chatie Web Component NgModule for Angular",
   "license": "Apache-2.0",
-  "main": "dist/wechaty.module.js",
+  "main": "bundles/wechaty.umd.js",
   "types": "dist/wechaty.module.d.ts",
   "scripts": {
-    "clean": "shx rm -fr dist/*",
+    "clean": "shx rm -fr dist/* bundles/*",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -16,10 +16,10 @@
     "nglint": "ng lint",
     "tslint": "tslint src/**/*.ts && tsc --noEmit",
     "e2e": "ng e2e",
-    "dist": "npm run clean && npm run ngc && npm run rollup && npm run es5 && npm run minify",
+    "dist": "npm run clean && npm run ngc && npm run rollup && npm run es6to5 && npm run minify:es5",
     "rollup": "rollup -c",
-    "minify": "uglifyjs dist/wechaty.umd.js --screw-ie8 --compress --mangle --comments --output dist/wechaty.umd.min.js",
-    "es5": "tsc --out ./dist/wechaty.umd.js --target es5 --allowJs dist/wechaty.es6.umd.js --lib es6,dom",
+    "minify:es5": "uglifyjs ./bundles/wechaty.umd.js --screw-ie8 --compress --mangle --comments --output ./bundles/wechaty.umd.min.js",
+    "es6to5": "tsc --out ./bundles/wechaty.umd.js --target es5 --allowJs bundles/wechaty.es6.umd.js --lib es6,dom",
     "ngc": "ngc -p src/tsconfig.aot.json"
   },
   "repository": {
@@ -72,6 +72,7 @@
     "zone.js": "^0.8.4"
   },
   "files": [
+    "bundles/",
     "dist/",
     "package.json",
     "README.md",

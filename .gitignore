@@ -47,3 +47,4 @@ t.*
 *.swp
 chatie-angular-*.*.*.tgz
 aot/
+bundles/
