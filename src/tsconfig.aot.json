@@ -23,9 +23,10 @@
     "skipLibCheck": true
   }
   , "files": [
-    "wechaty/wechaty.module.ts"
-    // "src/app/app.module.ts",
-    // "src/main.ts"
+      "main.ts"
+    , "typings.d.ts"
+    // , "wechaty/wechaty.module.ts"
+    // , "src/app/app.module.ts"
   ]
   , "exclude": [
     "test.ts",

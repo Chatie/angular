@@ -1,3 +1,5 @@
+import { version } from '../../package.json'
+
 import {
   Component,
   EventEmitter,
@@ -73,7 +75,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
     if (!this.ioSubscription) {
       return
     }
-    this.ioService.setToken(this._token)
+    this.ioService.token(this._token)
     this.ioService.restart()
   }
   get token() { return this._token }
@@ -86,7 +88,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
 
   private ioService: IoService
 
-  public readonly version = require('../../package.json').version as string
+  public version = version
 
   counter = 0
   timestamp = new Date()
@@ -98,15 +100,17 @@ export class WechatyComponent implements OnInit, OnDestroy {
     this.log.verbose('WechatyComponent', 'constructor() v%s', this.version)
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.log.verbose('WechatyComponent', 'ngOninit() with token: ' + this.token)
 
     this.ioService = new IoService()
     /**
      * @Input(token) is not inittialized in constructor()
      */
-    this.ioService.setToken(this.token)
-    this.ioService.start()
+    if (this.token) {
+      this.ioService.token(this.token)
+      await this.ioService.start()
+    }
 
     this.ioSubscription = this.ioService.io()
                           .subscribe(this.onIo.bind(this))

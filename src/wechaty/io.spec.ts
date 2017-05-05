@@ -25,9 +25,14 @@ describe('IoService', () => {
   //   expect(service).toBeTruthy();
   // }));
 
-  it('should ...', inject([Injector], () => {
+  it('should create', () => {
     const ioService = new IoService()
-    expect(ioService).toBeTruthy();
-  }));
+    expect(ioService).toBeTruthy()
+  })
+
+  it('should has version', () => {
+    const ioService = new IoService()
+    expect(/^\d+\.\d+\.\d+$/.test(ioService.version)).toBeTruthy();
+  })
 
 });

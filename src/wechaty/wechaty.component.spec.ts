@@ -27,4 +27,8 @@ describe('WechatyComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should has version', () => {
+    expect(/^\d+\.\d+\.\d+$/.test(component.version)).toBeTruthy();
+  });
 });
