@@ -64,7 +64,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
   @Output() error     = new EventEmitter<Error>()
   @Output() heartbeat = new EventEmitter<any>()
 
-  @Input() set token(token: string | null) { this.updateToken(token || '') }
+  @Input() set token(token: string | null) { this.updateToken(token) }
   get token() { return this._token }
   private _token: string
 
@@ -161,9 +161,9 @@ export class WechatyComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateToken(token: string) {
+  private updateToken(token: string | null) {
     this.log.silly('WechatyCoreCmp', 'set token(%s)', token)
-    if (token && this._token === token) {
+    if (!token || this._token === token) {
       return
     }
     this._token = token.trim()
