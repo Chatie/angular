@@ -189,22 +189,6 @@ export class IoService {
   }
 
   /**
-   * Status Event Listeners
-   *
-   */
-  private statusOnOpen() {
-    this.log.verbose('IoService', 'statusOnOpen()')
-
-    this.socketSendBuffer()
-
-    const ioEvent: IoEvent = {
-      name: 'update',
-      payload: 'onOpen',
-    }
-    this.socket.next(ioEvent)
-  }
-
-  /**
    * Creates a subject from the specified observer and observable.
    *  - https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/subject.md
    * Create an Rx.Subject using Subject.create that allows onNext without subscription
@@ -254,6 +238,8 @@ export class IoService {
     }
 
     this._websocket = new WebSocket(this.endPoint(), this.PROTOCOL)
+    this.socketUpdateState()
+
     const onOpenPromise = new Promise<void>((resolve, reject) => {
       this.log.verbose('IoService', 'connectRxSocket() Promise()')
 
@@ -266,7 +252,7 @@ export class IoService {
 
       this._websocket.onopen = (e) => {
         this.log.verbose('IoService', 'connectRxSocket() Promise() WebSocket.onOpen() resolve()')
-        this._readyState.next(ReadyState.OPEN)
+        this.socketUpdateState()
         clearTimeout(id)
         resolve()
       }
@@ -287,7 +273,23 @@ export class IoService {
     return url
   }
 
-  /**
+  /******************************************************************
+   * Status Event Listeners
+   *
+   */
+  private statusOnOpen() {
+    this.log.verbose('IoService', 'statusOnOpen()')
+
+    this.socketSendBuffer()
+
+    const ioEvent: IoEvent = {
+      name: 'update',
+      payload: 'onOpen',
+    }
+    this.socket.next(ioEvent)
+  }
+
+  /******************************************************************
    * Io RPC Methods
    *
    */
@@ -302,7 +304,7 @@ export class IoService {
     // TODO: get the return value
   }
 
-  /**
+  /******************************************************************
    * Socket Actions
    *
    */
@@ -314,6 +316,8 @@ export class IoService {
     }
 
     const ret = this._websocket.close(code, reason)
+    this.socketUpdateState()
+
     this._websocket = null
     return ret
   }
@@ -351,7 +355,12 @@ export class IoService {
     }
   }
 
-  /**
+  private socketUpdateState() {
+    this.log.verbose('IoService', 'socketUpdateState() is:%s', ReadyState[this._websocket.readyState])
+    this._readyState.next(this._websocket.readyState)
+  }
+
+  /******************************************************************
    * Socket Events Listener
    *
    */
@@ -384,7 +393,7 @@ export class IoService {
   private socketOnClose(event: Event) {
     this.log.verbose('IoService', 'socketOnClose(%s)', event)
 
-    this._readyState.next(ReadyState.CLOSED)
+    this.socketUpdateState()
     /**
      * reconnect inside onClose
      */
