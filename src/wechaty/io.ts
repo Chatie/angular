@@ -9,7 +9,7 @@ import {
 import { Brolog }  from 'brolog'
 
 export type WechatyEventName =
-  'scan'
+    'scan'
   | 'login' | 'logout'
   | 'reset' | 'shutdown'
   | 'ding'  | 'dong'
@@ -60,6 +60,20 @@ export class IoService {
     this.log.verbose('IoService', 'constructor() v%s', this.version)
   }
 
+  public async init(): Promise<void> {
+    this.log.verbose('IoService', 'init()')
+
+    try {
+      await this.initProtocol()
+      await this.initRxSocket()
+    } catch (e) {
+      this.log.silly('IoService', 'init() exception: %s', e.message)
+      throw e
+    }
+
+    return
+  }
+
   public token(newToken?: string): string {
     this.log.silly('IoService', 'setToken(%s)', newToken)
     if (newToken) {
@@ -76,13 +90,7 @@ export class IoService {
     }
     this.autoReconnect = true
 
-    try {
-      await this.initProtocol()
-      await this.initRxSocket()
-    } catch (e) {
-      this.log.silly('IoService', 'start() exception: %s', e.message)
-      throw e
-    }
+    return await this.connectRxSocket()
   }
 
   async stop(): Promise<void> {
@@ -91,11 +99,12 @@ export class IoService {
     this.autoReconnect = false
 
     if (this._websocket) {
-      this._websocket.close(1000, 'IoService.stop()')
+      this.socketClose(1000, 'IoService.stop()')
     }
-    if (this.socket) {
-      this.socket.unsubscribe()
-    }
+
+    // if (this.socket) {
+    //   this.socket.unsubscribe()
+    // }
 
     return
   }
@@ -145,17 +154,55 @@ export class IoService {
    *   A socket implementation (example, don't use)
    *  - http://stackoverflow.com/a/34862286/1123955
    */
-  async initRxSocket(): Promise<void> {
+  initRxSocket(): void {
     this.log.verbose('IoService', 'initRxSocket()')
 
+    if (this.socket) {
+      throw new Error('re-init is not permitted')
+    }
+
+    // 1. Mobile Originated. moObserver.next() means mobile is sending
+    this.moObserver = {
+      next:     this.socketSend.bind(this),
+      error:    this.socketClose.bind(this),
+      complete: this.socketClose.bind(this),
+    }
+
+    // 2. Mobile Terminated. mtObserver.next() means mobile is receiving
+    const observable = Observable.create(observer => {
+        this.mtObserver = observer
+        return this.socketClose.bind(this)
+    })
+
+    // 3. Subject for MO & MT Observers
+    this.socket = Subject.create(this.moObserver, observable)
+
+    return
+  }
+
+  private async connectRxSocket(): Promise<void> {
+    this.log.verbose('IoService', 'connectRxSocket()')
+
     if (this.online()) {
-      this.log.warn('IoService', 'initRxSocket() there already has a live websocket. will go ahead and overwrite it')
+      this.log.warn('IoService', 'connectRxSocket() there already has a live websocket. will go ahead and overwrite it')
+    }
+
+    // FIXME: check & close the old one
+    if (this._websocket) {
+      this.log.warn('IoService', 'connectRxSocket() closing old unclosed websocket...')
+      this.socketClose(1000, 'IoService.connectRxSocket()')
     }
 
     this._websocket = new WebSocket(this.endPoint(), this.PROTOCOL)
 
+    // Handle the payload
+    this._websocket.onmessage = this.socketOnMessage.bind(this)
+    // Deal the event
+    this._websocket.onerror   = this.socketOnError.bind(this)
+    this._websocket.onclose   = this.socketOnClose.bind(this)
+
     const onOpenPromise = new Promise<void>((resolve, reject) => {
-      this.log.verbose('IoService', 'initRxSocket() Promise() onOpenPromise')
+      this.log.verbose('IoService', 'connectRxSocket() Promise() onOpenPromise')
 
       const id = setTimeout(() => {
         const e = new Error('rxSocket connect timeout after '
@@ -165,36 +212,12 @@ export class IoService {
       }, this.CONNECT_TIMEOUT) // timeout for connect websocket
 
       this._websocket.onopen = (e) => {
-        this.log.verbose('IoService', 'initRxSocket() Promise() WebSocket.onOpen()')
+        this.log.verbose('IoService', 'connectRxSocket() Promise() WebSocket.onOpen()')
         this._status.next(Status.OPEN)
         clearTimeout(id)
         resolve()
       }
     })
-
-    // Create observer to handle sending messages
-    this.moObserver = {
-      next:     this.socketSend.bind(this),
-      error:    this.socketClose.bind(this),
-      complete: this.socketClose.bind(this),
-    }
-
-    // Create observable to handle the messages
-    const observable = Observable.create(observer => {
-        // save to reuse
-        this.mtObserver = observer
-        // Handle the payload
-        this._websocket.onmessage = this.socketOnMessage.bind(this)
-        // Deal the event
-        this._websocket.onerror   = this.socketOnError.bind(this)
-        this._websocket.onclose   = this.socketOnClose.bind(this)
-
-        return this.socketClose.bind(this)
-    })
-
-    this.socket = Subject.create(this.moObserver, observable)
-
-    return onOpenPromise
   }
 
   online(): boolean {
@@ -230,14 +253,15 @@ export class IoService {
    * Socket Actions
    *
    */
-  private socketClose() {
+  private socketClose(code?: number, reason?: string) {
     this.log.verbose('IoService', 'socketClose()')
 
     if (!this._websocket) {
       throw new Error('no websocket')
     }
-    this._websocket.close()
+    const ret = this._websocket.close(code, reason)
     this._websocket = null
+    return ret
   }
 
   private socketSend(e: IoEvent) {

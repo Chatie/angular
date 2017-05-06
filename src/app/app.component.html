@@ -11,7 +11,7 @@
   (logout)    = "onEvent('logout'    , $event)"
   (error)     = "onEvent('error'     , $event)"
 >
-  <h2>Wechaty Core Web Component</h2>
+  <h2>Wechaty Web Component for Chatie</h2>
 
   <label for="token">Put Your WECHATY_TOKEN here:</label>
   <input
@@ -21,7 +21,7 @@
     placeholder="WECHATY_TOKEN"
     [style.background-color] = "wechaty.online() ? 'green' : wechaty.connecting() ? 'yellow' : 'red'"
   >
-  <button (click)="wechaty.token = token">Set Token</button>
+  <button (click)="test(wechaty)">Set Token</button>
 
   <div>
     Event Counter: {{ wechaty.counter }}

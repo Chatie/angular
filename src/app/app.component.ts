@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 
 import { Brolog } from 'brolog'
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector:     'app-root',
+  templateUrl:  'app.component.html',
+  styleUrls:    ['app.component.css'],
 })
 export class AppComponent {
 
@@ -13,12 +13,12 @@ export class AppComponent {
 
   token: string
   lastEvents: any = {
-    'heartbeat': {}
-    , 'scan': {}
-    , 'login': {}
-    , 'message': {}
-    , 'logout': {}
-    , 'error': {}
+    'error':      {},
+    'heartbeat':  {},
+    'login':      {},
+    'logout':     {},
+    'message':    {},
+    'scan':       {},
   }
   eventNameList: string[] = Object.keys(this.lastEvents)
 
@@ -32,5 +32,11 @@ export class AppComponent {
     this.eventNameList = Object.keys(this.lastEvents).sort((a, b) => {
       return this.lastEvents[b].timestamp - (this.lastEvents[a].timestamp || 0)
     })
+  }
+
+  test(wechaty) {
+    this.log.verbose('AppComponent', 'test() with token:%s', this.token)
+
+    wechaty.token = this.token
   }
 }

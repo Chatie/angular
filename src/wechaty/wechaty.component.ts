@@ -6,10 +6,8 @@ import {
   Input,
   NgZone,
   Output,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
 }                   from '@angular/core'
 
 import {
@@ -59,7 +57,7 @@ export interface UserInfo {
   // templateUrl: 'wechaty.component.html',
   // moduleId: module.id,
 })
-export class WechatyComponent implements OnInit, OnChanges, OnDestroy {
+export class WechatyComponent implements OnInit, OnDestroy {
   @Output() message   = new EventEmitter<string>()
   @Output() scan      = new EventEmitter<ScanInfo>()
   @Output() login     = new EventEmitter<UserInfo>()
@@ -67,7 +65,30 @@ export class WechatyComponent implements OnInit, OnChanges, OnDestroy {
   @Output() error     = new EventEmitter<Error>()
   @Output() heartbeat = new EventEmitter<any>()
 
-  @Input() token: string
+  private _token: string
+  get token() { return this._token }
+  @Input() set token(_newToken: string) {
+    this.log.verbose('WechatyComponent', 'set token(%s)', _newToken)
+
+    const newToken = (_newToken || '').trim()
+
+    if (this._token === newToken) {
+      this.log.silly('WechatyComponent', 'set token(%s) not new', newToken)
+      return
+    }
+
+    this._token = newToken
+
+    if (!this.ioService) {
+      this.log.silly('WechatyComponent', 'set token() skip token init value')
+      this.log.silly('WechatyComponent', 'set token() because ioService will do it inside ngOnInit()')
+      return
+    }
+
+    this.log.silly('WechatyComponent', 'set token(%s) reloading ioService now...', newToken)
+    this.ioService.token(this.token)
+    this.ioService.restart() // async
+  }
 
   private timer: Observable<any>
   private timerSub: Subscription | null = null
@@ -81,8 +102,8 @@ export class WechatyComponent implements OnInit, OnChanges, OnDestroy {
   timestamp = new Date()
 
   constructor(
+    private log:    Brolog,
     private ngZone: NgZone,
-    private log: Brolog,
   ) {
     this.log.verbose('WechatyComponent', 'constructor() v%s', this.version)
   }
@@ -91,6 +112,8 @@ export class WechatyComponent implements OnInit, OnChanges, OnDestroy {
     this.log.verbose('WechatyComponent', 'ngOninit() with token: ' + this.token)
 
     this.ioService = new IoService()
+    await this.ioService.init()
+
     /**
      * @Input(token) is not inittialized in constructor()
      */
@@ -102,20 +125,6 @@ export class WechatyComponent implements OnInit, OnChanges, OnDestroy {
     this.ioService.socket.subscribe(this.onIo.bind(this))
 
     // this.startTimer()
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    this.log.verbose('WechatyComponent', 'ngOnChanges({#:%s})', Object.keys(changes).length)
-
-    if (changes.token) {
-      this.log.verbose('WechatyComponent', 'ngOnChanges() token changed from %s to %s',
-                                          changes.token.previousValue,
-                                          changes.token.currentValue,
-                      )
-      const token = changes.token.currentValue.trim()
-      this.ioService.token(token)
-      this.ioService.restart()
-    }
   }
 
   ngOnDestroy() {
