@@ -233,36 +233,25 @@ export class IoService {
   private async connectRxSocket(): Promise<void> {
     this.log.verbose('IoService', 'connectRxSocket()')
 
-    if (this.snapshot.readyState === ReadyState.OPEN) {
-      // this.log.warn('IoService', 'connectRxSocket() there already has a live websocket. will go ahead and overwrite it')
-      throw new Error('already connected')
-    }
-
     // FIXME: check & close the old one
     if (this._websocket) {
       throw new Error('already has a websocket')
     }
 
-    if (this.stateSwitch.current() !== 'open'
+    if (this.stateSwitch.target() !== 'open'
+      || this.stateSwitch.current() !== 'open'
       || this.stateSwitch.stable()
     ) {
       throw new Error('switch state not right')
     }
 
     this._websocket = new WebSocket(this.endPoint(), this.PROTOCOL)
-
-    // Handle the payload
-    this._websocket.onmessage = this.socketOnMessage.bind(this)
-    // Deal the event
-    this._websocket.onerror   = this.socketOnError.bind(this)
-    this._websocket.onclose   = this.socketOnClose.bind(this)
-
     const onOpenPromise = new Promise<void>((resolve, reject) => {
       this.log.verbose('IoService', 'connectRxSocket() Promise()')
 
       const id = setTimeout(() => {
         const e = new Error('rxSocket connect timeout after '
-                            + Math.round(this.CONNECT_TIMEOUT / 1000)
+                            + Math.round(this.CONNECT_TIMEOUT / 1000),
                           )
         reject(e)
       }, this.CONNECT_TIMEOUT) // timeout for connect websocket
@@ -274,6 +263,14 @@ export class IoService {
         resolve()
       }
     })
+
+    // Handle the payload
+    this._websocket.onmessage = this.socketOnMessage.bind(this)
+    // Deal the event
+    this._websocket.onerror   = this.socketOnError.bind(this)
+    this._websocket.onclose   = this.socketOnClose.bind(this)
+
+    return onOpenPromise
   }
 
   private endPoint(): string {
@@ -319,7 +316,7 @@ export class IoService {
     const strEvt = JSON.stringify(e)
 
     if (!this._websocket) {
-      throw new Error('no websocket')
+      this.log.silly('IoService', 'socketSend() no _websocket')
     }
 
     if (this.snapshot.readyState === ReadyState.OPEN) {

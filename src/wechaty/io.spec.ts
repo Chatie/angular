@@ -1,12 +1,14 @@
-import { TestBed, inject } from '@angular/core/testing';
+import {
+  TestBed,
+}                       from '@angular/core/testing'
 
-import { Brolog }   from 'brolog'
+import { Brolog }       from 'brolog'
 
 import {
-  Injector
-} from '@angular/core'
+  Injector,
+}                       from '@angular/core'
 
-import { IoService } from './io';
+import { IoService }    from './io'
 
 describe('IoService', () => {
   beforeEach(() => {
@@ -17,13 +19,13 @@ describe('IoService', () => {
           useFactory() { return Brolog.instance('info') },
         },
         Injector,
-      ]
-    });
-  });
+      ],
+    })
+  })
 
   // it('should ...', inject([IoService], (service: IoService) => {
-  //   expect(service).toBeTruthy();
-  // }));
+  //   expect(service).toBeTruthy()
+  // }))
 
   it('should create', () => {
     const ioService = new IoService()
@@ -32,7 +34,7 @@ describe('IoService', () => {
 
   it('should has version', () => {
     const ioService = new IoService()
-    expect(/^\d+\.\d+\.\d+$/.test(ioService.version)).toBeTruthy();
+    expect(/^\d+\.\d+\.\d+$/.test(ioService.version)).toBeTruthy()
   })
 
-});
+})

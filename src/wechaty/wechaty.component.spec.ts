@@ -1,34 +1,38 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  async,
+  ComponentFixture,
+  TestBed,
+}                           from '@angular/core/testing'
 
-import { Brolog } from 'brolog'
+import { Brolog }           from 'brolog'
 
-import { WechatyComponent } from './wechaty.component';
+import { WechatyComponent } from './wechaty.component'
 
 describe('WechatyComponent', () => {
-  let component: WechatyComponent;
-  let fixture: ComponentFixture<WechatyComponent>;
+  let component: WechatyComponent
+  let fixture: ComponentFixture<WechatyComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ WechatyComponent ],
       providers: [
         Brolog,
-      ]
+      ],
     })
-    .compileComponents();
-  }));
+    .compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WechatyComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(WechatyComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    expect(component).toBeTruthy()
+  })
 
   it('should has version', () => {
-    expect(/^\d+\.\d+\.\d+$/.test(component.version)).toBeTruthy();
-  });
-});
+    expect(/^\d+\.\d+\.\d+$/.test(component.version)).toBeTruthy()
+  })
+})

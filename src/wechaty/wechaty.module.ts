@@ -9,9 +9,8 @@ import { WechatyComponent } from './wechaty.component'
   ],
   exports: [
     WechatyComponent,
-  ]
+  ],
 })
 export class WechatyModule {}
 
-// export { WechatyComponent } from './wechaty.component'
 export * from './wechaty.component'

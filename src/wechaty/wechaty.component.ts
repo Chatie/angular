@@ -182,8 +182,8 @@ export class WechatyComponent implements OnInit, OnDestroy {
     this.log.verbose('WechatyComponent', 'reset(%s)', reason)
 
     const resetEvent: IoEvent = {
-      name: 'reset'
-      , payload: reason
+      name: 'reset',
+      payload: reason,
     }
     if (!this.ioService) {
       throw new Error('no ioService')
@@ -195,8 +195,8 @@ export class WechatyComponent implements OnInit, OnDestroy {
     this.log.verbose('WechatyComponent', 'shutdown(%s)', reason)
 
     const shutdownEvent: IoEvent = {
-      name: 'shutdown'
-      , payload: reason
+      name: 'shutdown',
+      payload: reason,
     }
     if (!this.ioService) {
       throw new Error('no ioService')
@@ -249,8 +249,8 @@ export class WechatyComponent implements OnInit, OnDestroy {
     this.log.silly('WechatyComponent', 'logoff(%s)', reason)
 
     const quitEvent: IoEvent = {
-      name: 'logout'
-      , payload: reason
+      name: 'logout',
+      payload: reason,
     }
     this.ioService.socket.next(quitEvent)
   }
