@@ -5,7 +5,7 @@ export default {
   dest: 'bundles/wechaty.es6.umd.js',
   sourceMap: true,
   format: 'umd',
-  moduleName: 'ng.wechaty',
+  moduleName: 'chatie.wechaty',
   globals: {
     '@angular/core': 'ng.core',
     'rxjs/Observable': 'Rx',
