@@ -4,6 +4,6 @@ interface NodeModule {
   id: string
 }
 declare module '*.json' {
-  export const version: any
+  export const version: string
   // export default version
 }
