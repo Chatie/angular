@@ -6,8 +6,10 @@ import {
   Input,
   NgZone,
   Output,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
 }                   from '@angular/core'
 
 import {
@@ -57,7 +59,7 @@ export interface UserInfo {
   // templateUrl: 'wechaty.component.html',
   // moduleId: module.id,
 })
-export class WechatyComponent implements OnInit, OnDestroy {
+export class WechatyComponent implements OnInit, OnChanges, OnDestroy {
   @Output() message   = new EventEmitter<string>()
   @Output() scan      = new EventEmitter<ScanInfo>()
   @Output() login     = new EventEmitter<UserInfo>()
@@ -65,25 +67,10 @@ export class WechatyComponent implements OnInit, OnDestroy {
   @Output() error     = new EventEmitter<Error>()
   @Output() heartbeat = new EventEmitter<any>()
 
-  @Input() set token(token: string | null) {
-    this.log.verbose('WechatyComponent', 'set token(%s)', token)
-    if (!token || this._token === token) {
-      return
-    }
-    this._token = token.trim()
-
-    if (!this.ioSubscription) {
-      return
-    }
-    this.ioService.token(this._token)
-    this.ioService.restart()
-  }
-  get token() { return this._token }
-  private _token: string
+  @Input() token: string
 
   private timer: Observable<any>
   private timerSub: Subscription | null = null
-  private ioSubscription: Subscription
   private ender: Subject<any>
 
   private ioService: IoService
@@ -112,21 +99,29 @@ export class WechatyComponent implements OnInit, OnDestroy {
       await this.ioService.start()
     }
 
-    this.ioSubscription = this.ioService.io()
-                          .subscribe(this.onIo.bind(this))
+    this.ioService.socket.subscribe(this.onIo.bind(this))
 
     // this.startTimer()
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.log.verbose('WechatyComponent', 'ngOnChanges({#:%s})', Object.keys(changes).length)
+
+    if (changes.token) {
+      this.log.verbose('WechatyComponent', 'ngOnChanges() token changed from %s to %s',
+                                          changes.token.previousValue,
+                                          changes.token.currentValue,
+                      )
+      const token = changes.token.currentValue.trim()
+      this.ioService.token(token)
+      this.ioService.restart()
+    }
   }
 
   ngOnDestroy() {
     this.log.verbose('WechatyComponent', 'ngOnDestroy()')
 
     this.endTimer()
-
-    if (this.ioSubscription) {
-      this.ioSubscription.unsubscribe()
-      // this.ioSubscription = null
-    }
 
     if (this.ioService) {
       this.ioService.stop()
@@ -184,8 +179,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
     if (!this.ioService) {
       throw new Error('no ioService')
     }
-    this.ioService.io()
-        .next(resetEvent)
+    this.ioService.socket.next(resetEvent)
   }
 
   public shutdown(reason: string) {
@@ -198,8 +192,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
     if (!this.ioService) {
       throw new Error('no ioService')
     }
-    this.ioService.io()
-        .next(shutdownEvent)
+    this.ioService.socket.next(shutdownEvent)
   }
 
   startTimer() {
@@ -250,8 +243,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
       name: 'logout'
       , payload: reason
     }
-    this.ioService.io()
-        .next(quitEvent)
+    this.ioService.socket.next(quitEvent)
   }
 
   online(): boolean {
