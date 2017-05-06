@@ -80,7 +80,7 @@ export class IoService {
     }
 
     this._readyState = new BehaviorSubject<ReadyState>(ReadyState.CLOSED)
-    this.stateSwitch = new StateSwitch<'open', 'close'>('IoService', 'close')
+    this.stateSwitch = new StateSwitch<'open', 'close'>('IoService', 'close', this.log)
     this.stateSwitch.setLog(this.log)
 
     try {
@@ -95,14 +95,20 @@ export class IoService {
       readyState: ReadyState.CLOSED,
       socket:     null,
     }
-    this.readyState.subscribe(s => this.snapshot.readyState = s)
-    this.socket.subscribe(e => this.snapshot.socket = e)
+    this.readyState.subscribe(s => {
+      this.log.silly('IoService', 'init() readyState.subscribe(%s)', ReadyState[s])
+      this.snapshot.readyState = s
+    })
+    this.socket.subscribe(e => {
+      this.log.silly('IoService', 'init() socket.subscribe(%s)', e)
+      this.snapshot.socket = e
+    })
 
     return
   }
 
   public token(newToken?: string): string {
-    this.log.silly('IoService', 'setToken(%s)', newToken)
+    this.log.silly('IoService', 'token(%s)', newToken)
     if (newToken) {
       this._token = newToken
     }
@@ -110,7 +116,7 @@ export class IoService {
   }
 
   async start(): Promise<void> {
-    this.log.verbose('IoService', 'start() with token:[%s]', this._token)
+    this.log.verbose('IoService', 'start() with token:%s', this._token)
 
     if (!this._token) {
       throw new Error('start() without token')
@@ -189,6 +195,8 @@ export class IoService {
   private statusOnOpen() {
     this.log.verbose('IoService', 'statusOnOpen()')
 
+    this.socketSendBuffer()
+
     const ioEvent: IoEvent = {
       name: 'update',
       payload: 'onOpen',
@@ -257,7 +265,7 @@ export class IoService {
       }, this.CONNECT_TIMEOUT) // timeout for connect websocket
 
       this._websocket.onopen = (e) => {
-        this.log.verbose('IoService', 'connectRxSocket() Promise() WebSocket.onOpen()')
+        this.log.verbose('IoService', 'connectRxSocket() Promise() WebSocket.onOpen() resolve()')
         this._readyState.next(ReadyState.OPEN)
         clearTimeout(id)
         resolve()
@@ -313,27 +321,33 @@ export class IoService {
   private socketSend(e: IoEvent) {
     this.log.silly('IoService', 'socketSend({name:%s, payload:%s})', e.name, e.payload)
 
-    const strEvt = JSON.stringify(e)
-
     if (!this._websocket) {
       this.log.silly('IoService', 'socketSend() no _websocket')
     }
 
-    if (this.snapshot.readyState === ReadyState.OPEN) {
-
-      // 1. check buffer for send old ones
-      while (this.sendBuffer.length) {
-        this.log.silly('IoService', 'socketSend() buffer processing: length: %d', this.sendBuffer.length)
-
-        const buf = this.sendBuffer.shift()
-        this._websocket.send(buf)
-      }
-      // 2. send this one
-      this._websocket.send(strEvt)
-
-    } else { // 3. buffer this message for future retry
+    if (e) {
+      this.log.silly('IoService', 'socketSend() buf len: %d', this.sendBuffer.length)
+      const strEvt = JSON.stringify(e)
       this.sendBuffer.push(strEvt)
-      this.log.silly('IoService', 'socketSend() without WebSocket.OPEN, buf len: %d', this.sendBuffer.length)
+    }
+
+    if (this.snapshot.readyState === ReadyState.OPEN) {
+      this.socketSendBuffer()
+    }
+  }
+
+  private socketSendBuffer() {
+    this.log.silly('IoService', 'socketSendBuffer() length:%s', this.sendBuffer.length)
+
+    if (!this._websocket) {
+      throw new Error('socketSendBuffer(): no _websocket')
+    }
+
+    while (this.sendBuffer.length) {
+      this.log.silly('IoService', 'socketSendBuffer() length: %d', this.sendBuffer.length)
+
+      const buf = this.sendBuffer.shift()
+      this._websocket.send(buf)
     }
   }
 
@@ -370,13 +384,18 @@ export class IoService {
   private socketOnClose(event: Event) {
     this.log.verbose('IoService', 'socketOnClose(%s)', event)
 
+    this._readyState.next(ReadyState.CLOSED)
     /**
      * reconnect inside onClose
      */
     if (this.autoReconnect) {
+      this.stateSwitch.current('open', false)
       setTimeout(_ => {
         this.connectRxSocket()
       }, 1000)
+    } else {
+      this.stateSwitch.target('close')
+      this.stateSwitch.current('close', true)
     }
     this._websocket = null
 
