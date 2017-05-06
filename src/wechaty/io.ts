@@ -1,12 +1,14 @@
-import { version } from '../../package.json'
+import { version }      from '../../package.json'
 
 import {
+  BehaviorSubject,
   Observable,
   Observer,
   Subject,
-}                  from 'rxjs/Rx'
+}                       from 'rxjs/Rx'
 
-import { Brolog }  from 'brolog'
+import { Brolog }       from 'brolog'
+import { StateSwitch }  from 'state-switch'
 
 export type WechatyEventName =
     'scan'
@@ -28,20 +30,28 @@ export interface IoEvent {
   payload: any
 }
 
-export enum Status {
-  CLOSE,
-  OPEN,
-  ERROR,
+export enum ReadyState {
+  CLOSED      = WebSocket.CLOSED,
+  CLOSING     = WebSocket.CLOSING,
+  CONNECTING  = WebSocket.CONNECTING,
+  OPEN        = WebSocket.OPEN,
+}
+
+interface IoServiceSnapshot {
+  readyState: ReadyState
+  socket:     IoEvent
 }
 
 export class IoService {
   public readonly version = version
   public socket: Subject<IoEvent>
 
-  public get status() {
-    return this._status.asObservable()
+  public get readyState() {
+    return this._readyState.asObservable()
   }
-  private _status = new Subject<Status>()
+  private _readyState: BehaviorSubject<ReadyState>
+
+  private snapshot: IoServiceSnapshot
 
   private autoReconnect = true
   private log = Brolog.instance()
@@ -56,6 +66,8 @@ export class IoService {
   private mtObserver: Observer<IoEvent> // Mobile Terminated. mtObserver.next() means mobile is receiving
   private sendBuffer: string[] = []
 
+  private stateSwitch: StateSwitch<'open', 'close'>
+
   constructor() {
     this.log.verbose('IoService', 'constructor() v%s', this.version)
   }
@@ -63,13 +75,28 @@ export class IoService {
   public async init(): Promise<void> {
     this.log.verbose('IoService', 'init()')
 
+    if (this.stateSwitch) {
+      throw new Error('re-init')
+    }
+
+    this._readyState = new BehaviorSubject<ReadyState>(ReadyState.CLOSED)
+    this.stateSwitch = new StateSwitch<'open', 'close'>('IoService', 'close')
+    this.stateSwitch.setLog(this.log)
+
     try {
-      await this.initProtocol()
+      await this.initStateDealer()
       await this.initRxSocket()
     } catch (e) {
       this.log.silly('IoService', 'init() exception: %s', e.message)
       throw e
     }
+
+    this.snapshot = {
+      readyState: ReadyState.CLOSED,
+      socket:     null,
+    }
+    this.readyState.subscribe(s => this.snapshot.readyState = s)
+    this.socket.subscribe(e => this.snapshot.socket = e)
 
     return
   }
@@ -83,34 +110,62 @@ export class IoService {
   }
 
   async start(): Promise<void> {
-    this.log.silly('IoService', 'start() with token:[%s]', this._token)
+    this.log.verbose('IoService', 'start() with token:[%s]', this._token)
 
     if (!this._token) {
-      this.log.warn('IoService', 'start() without valid token:[%s]', this._token)
+      throw new Error('start() without token')
     }
+
+    if (this.stateSwitch.target() === 'open') {
+      throw new Error('stateSwitch target is already `open`')
+    }
+    if (this.stateSwitch.inprocess()) {
+      throw new Error('stateSwitch inprocess() is true')
+    }
+
+    this.stateSwitch.target('open')
+    this.stateSwitch.current('open', false)
+
     this.autoReconnect = true
 
-    return await this.connectRxSocket()
+    try {
+      await this.connectRxSocket()
+      this.stateSwitch.current('open', true)
+    } catch (e) {
+      this.log.warn('IoService', 'start() failed:%s', e.message)
+
+      this.stateSwitch.target('close')
+      this.stateSwitch.current('close', true)
+    }
   }
 
   async stop(): Promise<void> {
     this.log.verbose('IoService', 'stop()')
 
+    if (this.stateSwitch.target() === 'close') {
+      throw new Error('stateSwitch target is already `close`')
+    }
+    if (this.stateSwitch.inprocess()) {
+      throw new Error('stateSwitch inprocess() is true')
+    }
+
+    this.stateSwitch.target('close')
+    this.stateSwitch.current('close', false)
+
     this.autoReconnect = false
 
     if (this._websocket) {
       this.socketClose(1000, 'IoService.stop()')
+    } else {
+      throw new Error('no websocket')
     }
-
-    // if (this.socket) {
-    //   this.socket.unsubscribe()
-    // }
+    this.stateSwitch.current('close', true)
 
     return
   }
 
   public async restart(): Promise<void> {
-    this.log.silly('IoService', 'restart()')
+    this.log.verbose('IoService', 'restart()')
     try {
       await this.stop()
       await this.start()
@@ -121,17 +176,10 @@ export class IoService {
     return
   }
 
-  private initProtocol() {
-    this.status.subscribe(s => {
-      switch (s) {
-        case Status.OPEN:
-          this.statusOnOpen()
-          break
-
-      default:
-        this.log.warn('IoService', 'initProtocol() unknown status:%s', s)
-      }
-    })
+  private initStateDealer() {
+    this.log.verbose('IoService', 'initStateDealer()')
+    this.readyState.filter(s => s === ReadyState.OPEN)
+                  .subscribe(open => this.statusOnOpen())
   }
 
   /**
@@ -140,9 +188,10 @@ export class IoService {
    */
   private statusOnOpen() {
     this.log.verbose('IoService', 'statusOnOpen()')
+
     const ioEvent: IoEvent = {
-      name: 'update'
-      , payload: 'onOpen'
+      name: 'update',
+      payload: 'onOpen',
     }
     this.socket.next(ioEvent)
   }
@@ -154,7 +203,7 @@ export class IoService {
    *   A socket implementation (example, don't use)
    *  - http://stackoverflow.com/a/34862286/1123955
    */
-  initRxSocket(): void {
+  private initRxSocket(): void {
     this.log.verbose('IoService', 'initRxSocket()')
 
     if (this.socket) {
@@ -170,8 +219,9 @@ export class IoService {
 
     // 2. Mobile Terminated. mtObserver.next() means mobile is receiving
     const observable = Observable.create(observer => {
-        this.mtObserver = observer
-        return this.socketClose.bind(this)
+      this.log.verbose('IoService', 'initRxSocket() Observable.create()')
+      this.mtObserver = observer
+      return this.socketClose.bind(this)
     })
 
     // 3. Subject for MO & MT Observers
@@ -183,14 +233,20 @@ export class IoService {
   private async connectRxSocket(): Promise<void> {
     this.log.verbose('IoService', 'connectRxSocket()')
 
-    if (this.online()) {
-      this.log.warn('IoService', 'connectRxSocket() there already has a live websocket. will go ahead and overwrite it')
+    if (this.snapshot.readyState === ReadyState.OPEN) {
+      // this.log.warn('IoService', 'connectRxSocket() there already has a live websocket. will go ahead and overwrite it')
+      throw new Error('already connected')
     }
 
     // FIXME: check & close the old one
     if (this._websocket) {
-      this.log.warn('IoService', 'connectRxSocket() closing old unclosed websocket...')
-      this.socketClose(1000, 'IoService.connectRxSocket()')
+      throw new Error('already has a websocket')
+    }
+
+    if (this.stateSwitch.current() !== 'open'
+      || this.stateSwitch.stable()
+    ) {
+      throw new Error('switch state not right')
     }
 
     this._websocket = new WebSocket(this.endPoint(), this.PROTOCOL)
@@ -202,7 +258,7 @@ export class IoService {
     this._websocket.onclose   = this.socketOnClose.bind(this)
 
     const onOpenPromise = new Promise<void>((resolve, reject) => {
-      this.log.verbose('IoService', 'connectRxSocket() Promise() onOpenPromise')
+      this.log.verbose('IoService', 'connectRxSocket() Promise()')
 
       const id = setTimeout(() => {
         const e = new Error('rxSocket connect timeout after '
@@ -213,24 +269,11 @@ export class IoService {
 
       this._websocket.onopen = (e) => {
         this.log.verbose('IoService', 'connectRxSocket() Promise() WebSocket.onOpen()')
-        this._status.next(Status.OPEN)
+        this._readyState.next(ReadyState.OPEN)
         clearTimeout(id)
         resolve()
       }
     })
-  }
-
-  online(): boolean {
-    if (!this._websocket) {
-      return false
-    }
-    return this._websocket.readyState === WebSocket.OPEN
-  }
-  connecting(): boolean {
-    if (!this._websocket) {
-      return false
-    }
-    return this._websocket.readyState === WebSocket.CONNECTING
   }
 
   private endPoint(): string {
@@ -239,14 +282,19 @@ export class IoService {
     return url
   }
 
-  ding(payload: any) {
+  /**
+   * Io RPC Methods
+   *
+   */
+  async ding(payload: any): Promise<any> {
     this.log.verbose('IoService', 'ding(%s)', payload)
 
     const e: IoEvent = {
-      name: 'ding'
-      , payload
+      name: 'ding',
+      payload,
     }
     this.socket.next(e)
+    // TODO: get the return value
   }
 
   /**
@@ -259,6 +307,7 @@ export class IoService {
     if (!this._websocket) {
       throw new Error('no websocket')
     }
+
     const ret = this._websocket.close(code, reason)
     this._websocket = null
     return ret
@@ -267,25 +316,27 @@ export class IoService {
   private socketSend(e: IoEvent) {
     this.log.silly('IoService', 'socketSend({name:%s, payload:%s})', e.name, e.payload)
 
-    const message = JSON.stringify(e)
+    const strEvt = JSON.stringify(e)
 
-    if (this.online()) {
-      if (!this._websocket) {
-        throw new Error('no websocket')
-      }
+    if (!this._websocket) {
+      throw new Error('no websocket')
+    }
+
+    if (this.snapshot.readyState === ReadyState.OPEN) {
+
       // 1. check buffer for send old ones
       while (this.sendBuffer.length) {
-        this.log.silly('IoService', 'wsSend() buffer processing: length: %d', this.sendBuffer.length)
+        this.log.silly('IoService', 'socketSend() buffer processing: length: %d', this.sendBuffer.length)
 
-        const m = this.sendBuffer.shift()
-        this._websocket.send(m)
+        const buf = this.sendBuffer.shift()
+        this._websocket.send(buf)
       }
       // 2. send this one
-      this._websocket.send(message)
+      this._websocket.send(strEvt)
 
     } else { // 3. buffer this message for future retry
-      this.sendBuffer.push(message)
-      this.log.silly('IoService', 'wsSend() without WebSocket.OPEN, buf len: %d', this.sendBuffer.length)
+      this.sendBuffer.push(strEvt)
+      this.log.silly('IoService', 'socketSend() without WebSocket.OPEN, buf len: %d', this.sendBuffer.length)
     }
   }
 
@@ -295,11 +346,12 @@ export class IoService {
    */
   private socketOnMessage(message: MessageEvent) {
     this.log.verbose('IoService', 'onMessage({data: %s})', message.data)
+
     const data = message.data // WebSocket data
 
     const ioEvent: IoEvent = {
-      name: 'raw',
-      payload: data,
+      name:     'raw',
+      payload:  data,
     } // this is default io event for unknown format message
 
     try {
@@ -307,7 +359,7 @@ export class IoService {
       ioEvent.name = obj.name
       ioEvent.payload = obj.payload
     } catch (e) {
-      this.log.warn('IoService', 'onMessage parse message fail.')
+      this.log.warn('IoService', 'onMessage parse message fail. save as RAW')
     }
 
     this.mtObserver.next(ioEvent)
@@ -315,7 +367,7 @@ export class IoService {
 
   private socketOnError(event: Event) {
     this.log.silly('IoService', 'socketOnError(%s)', event)
-    this._websocket = null
+    // this._websocket = null
   }
 
   private socketOnClose(event: Event) {
@@ -326,10 +378,10 @@ export class IoService {
      */
     if (this.autoReconnect) {
       setTimeout(_ => {
-        this.initRxSocket()
+        this.connectRxSocket()
       }, 1000)
     }
-    // this.websocket = null
+    this._websocket = null
 
     // if (!e.wasClean) {
     //   // console.warn('IoService.onClose: e.wasClean FALSE')

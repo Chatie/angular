@@ -66,6 +66,7 @@
     "rollup-plugin-json": "^2.1.1",
     "rxjs": "^5.3",
     "shx": "^0.2.2",
+    "state-switch": "^0.1.11",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
     "typescript": "^2.3.2",

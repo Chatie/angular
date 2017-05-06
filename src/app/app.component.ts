@@ -1,6 +1,8 @@
-import { Component } from '@angular/core'
+import { Component }        from '@angular/core'
 
-import { Brolog } from 'brolog'
+import { Brolog }           from 'brolog'
+
+import { WechatyComponent } from '../wechaty/wechaty.module'
 
 @Component({
   selector:     'app-root',
@@ -32,6 +34,18 @@ export class AppComponent {
     this.eventNameList = Object.keys(this.lastEvents).sort((a, b) => {
       return this.lastEvents[b].timestamp - (this.lastEvents[a].timestamp || 0)
     })
+  }
+
+  stateColor(wechaty: WechatyComponent) {
+    return wechaty.readyState.map(stateToColor)
+
+    function stateToColor(state) {
+      return state === WebSocket.OPEN
+              ? 'green'
+              : state === WebSocket.CONNECTING
+                ? 'yellow'
+                : 'red'
+    }
   }
 
   test(wechaty) {

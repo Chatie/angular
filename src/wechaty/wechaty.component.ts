@@ -255,15 +255,8 @@ export class WechatyComponent implements OnInit, OnDestroy {
     this.ioService.socket.next(quitEvent)
   }
 
-  online(): boolean {
-    return this.ioService.online()
+  public get readyState() {
+    return this.ioService.readyState
   }
 
-  connecting(): boolean {
-    return this.ioService.connecting()
-  }
-
-  offline(): boolean {
-    return !(this.online() || this.connecting())
-  }
 }

@@ -19,7 +19,7 @@
     [(ngModel)]="token"
     name="token"
     placeholder="WECHATY_TOKEN"
-    [style.background-color] = "wechaty.online() ? 'green' : wechaty.connecting() ? 'yellow' : 'red'"
+    [style.background-color] = "stateColor(wechaty) | async"
   >
   <button (click)="test(wechaty)">Set Token</button>
 
