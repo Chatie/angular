@@ -400,8 +400,9 @@ export class IoService {
      */
     if (this.autoReconnect) {
       this.stateSwitch.current('open', false)
-      setTimeout(_ => {
-        this.connectRxSocket()
+      setTimeout(async () => {
+        await this.connectRxSocket()
+        this.stateSwitch.current('open', true)
       }, 1000)
     } else {
       this.stateSwitch.target('close')
