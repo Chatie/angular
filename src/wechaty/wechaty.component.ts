@@ -21,6 +21,8 @@ import { Brolog }   from 'brolog'
 import {
   IoEvent,
   IoService,
+  // tslint:disable-next-line:no-unused-variable
+  ReadyState,
 }                   from './io'
 
 /**

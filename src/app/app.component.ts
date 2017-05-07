@@ -1,8 +1,14 @@
-import { Component }        from '@angular/core'
+import { Component }    from '@angular/core'
 
-import { Brolog }           from 'brolog'
+// tslint:disable-next-line:no-unused-variable
+import { Observable }   from 'rxjs/Observable'
 
-import { WechatyComponent } from '../wechaty/wechaty.module'
+import { Brolog }       from 'brolog'
+
+import {
+  ReadyState,
+  WechatyComponent,
+}                       from '../wechaty/wechaty.module'
 
 @Component({
   selector:     'app-root',
@@ -39,7 +45,7 @@ export class AppComponent {
   stateColor(wechaty: WechatyComponent) {
     return wechaty.readyState.map(stateToColor)
 
-    function stateToColor(state) {
+    function stateToColor(state: ReadyState) {
       return state === WebSocket.OPEN
               ? 'green'
               : state === WebSocket.CONNECTING
@@ -48,7 +54,7 @@ export class AppComponent {
     }
   }
 
-  test(wechaty) {
+  test(wechaty: WechatyComponent) {
     this.log.verbose('AppComponent', 'test() with token:%s', this.token)
 
     wechaty.token = this.token

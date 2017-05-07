@@ -37,7 +37,7 @@ export enum ReadyState {
   OPEN        = WebSocket.OPEN,
 }
 
-interface IoServiceSnapshot {
+export interface IoServiceSnapshot {
   readyState: ReadyState
   socket:     IoEvent
 }
@@ -161,18 +161,11 @@ export class IoService {
 
     this.autoReconnect = false
 
-    if (this._websocket) {
-
-      const future = new Promise((resolve, reject) => {
-        this.readyState.filter(s => s === ReadyState.CLOSED)
-                        .subscribe(resolve)
-      })
-      this.socketClose(1000, 'IoService.stop()')
-      await future // wait websocket closed
-
-    } else {
+    if (!this._websocket) {
       throw new Error('no websocket')
     }
+
+    await this.socketClose(1000, 'IoService.stop()')
     this.stateSwitch.current('close', true)
 
     return
@@ -218,7 +211,7 @@ export class IoService {
     }
 
     // 2. Mobile Terminated. mtObserver.next() means mobile is receiving
-    const observable = Observable.create(observer => {
+    const observable = Observable.create((observer: Observer<IoEvent>) => {
       this.log.verbose('IoService', 'initRxSocket() Observable.create()')
       this.mtObserver = observer
       return this.socketClose.bind(this)
