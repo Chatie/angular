@@ -26,8 +26,8 @@ export type ServerEventName =
 export type IoEventName = 'raw' | WechatyEventName | ServerEventName
 
 export interface IoEvent {
-  name: IoEventName
-  payload: any
+  name: IoEventName,
+  payload: any,
 }
 
 export enum ReadyState {
@@ -51,7 +51,7 @@ export class IoService {
   }
   private _readyState: BehaviorSubject<ReadyState>
 
-  private snapshot: IoServiceSnapshot
+  public snapshot: IoServiceSnapshot
 
   private autoReconnect = true
   private log = Brolog.instance()
@@ -149,10 +149,11 @@ export class IoService {
     this.log.verbose('IoService', 'stop()')
 
     if (this.stateSwitch.target() === 'close') {
-      throw new Error('stateSwitch target is already `close`')
-    }
-    if (this.stateSwitch.inprocess()) {
-      throw new Error('stateSwitch inprocess() is true')
+      this.log.warn('IoService', 'stop() stateSwitch target is already `close`')
+      if (this.stateSwitch.inprocess()) {
+        throw new Error('stateSwitch inprocess() is true')
+      }
+      return
     }
 
     this.stateSwitch.target('close')
