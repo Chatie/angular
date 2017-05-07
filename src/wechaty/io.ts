@@ -162,7 +162,14 @@ export class IoService {
     this.autoReconnect = false
 
     if (this._websocket) {
+
+      const future = new Promise((resolve, reject) => {
+        this.readyState.filter(s => s === ReadyState.CLOSED)
+                        .subscribe(resolve)
+      })
       this.socketClose(1000, 'IoService.stop()')
+      await future // wait websocket closed
+
     } else {
       throw new Error('no websocket')
     }
@@ -309,18 +316,24 @@ export class IoService {
    * Socket Actions
    *
    */
-  private socketClose(code?: number, reason?: string) {
+  private async socketClose(code?: number, reason?: string): Promise<void> {
     this.log.verbose('IoService', 'socketClose()')
 
     if (!this._websocket) {
       throw new Error('no websocket')
     }
 
-    const ret = this._websocket.close(code, reason)
+    this._websocket.close(code, reason)
     this.socketUpdateState()
 
+    const future = new Promise(resolve => {
+      this.readyState.filter(s => s === ReadyState.CLOSED)
+                      .subscribe(resolve)
+    })
+    await future
+
     this._websocket = null
-    return ret
+    return
   }
 
   private socketSend(e: IoEvent) {
@@ -357,7 +370,9 @@ export class IoService {
   }
 
   private socketUpdateState() {
-    this.log.verbose('IoService', 'socketUpdateState() is:%s', ReadyState[this._websocket.readyState])
+    this.log.verbose('IoService', 'socketUpdateState() is %s',
+                                  ReadyState[this._websocket.readyState]
+                    )
     this._readyState.next(this._websocket.readyState)
   }
 
