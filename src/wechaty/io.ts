@@ -336,16 +336,16 @@ export class IoService {
     return
   }
 
-  private socketSend(e: IoEvent) {
-    this.log.silly('IoService', 'socketSend({name:%s, payload:%s})', e.name, e.payload)
+  private socketSend(ioEvent: IoEvent) {
+    this.log.silly('IoService', 'socketSend({name:%s, payload:%s})', ioEvent.name, ioEvent.payload)
 
     if (!this._websocket) {
       this.log.silly('IoService', 'socketSend() no _websocket')
     }
 
-    if (e) {
+    if (ioEvent) {
       this.log.silly('IoService', 'socketSend() buf len: %d', this.sendBuffer.length)
-      const strEvt = JSON.stringify(e)
+      const strEvt = JSON.stringify(ioEvent)
       this.sendBuffer.push(strEvt)
     }
 
@@ -371,7 +371,7 @@ export class IoService {
 
   private socketUpdateState() {
     this.log.verbose('IoService', 'socketUpdateState() is %s',
-                                  ReadyState[this._websocket.readyState]
+                                  ReadyState[this._websocket.readyState],
                     )
     this._readyState.next(this._websocket.readyState)
   }
