@@ -401,9 +401,18 @@ export class IoService {
     // this._websocket = null
   }
 
-  private socketOnClose(event: CloseEvent) {
-    this.log.verbose('IoService', 'socketOnClose(%s)', event)
-
+  /**
+   * https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
+   * code: 1006	CLOSE_ABNORMAL
+   *  - Reserved. Used to indicate that a connection was closed abnormally
+   *    (that is, with no close frame being sent) when a status code is expected.
+   */
+  private socketOnClose(closeEvent: CloseEvent) {
+    this.log.verbose('IoService', 'socketOnClose({code:%s, reason:%s, returnValue:%s})',
+                                  closeEvent.code,
+                                  closeEvent.reason,
+                                  closeEvent.returnValue,
+                    )
     this.socketUpdateState()
     /**
      * reconnect inside onClose
@@ -420,7 +429,7 @@ export class IoService {
     }
     this._websocket = null
 
-    if (!event.wasClean) {
+    if (!closeEvent.wasClean) {
       this.log.warn('IoService', 'socketOnClose() event.wasClean FALSE')
       // TODO emit error
     }
