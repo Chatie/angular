@@ -38,11 +38,15 @@ import { WechatyModule }  from '@chatie/angular'
   #wechaty
   token="WECHATY_TOKEN"
 
-  (scan)      = "onEvent('scan'      , $event)"
+  (error)     = "onEvent('error'     , $event)"
+  (heartbeat) = "onEvent('heartbeat' , $event)"
   (login)     = "onEvent('login'     , $event)"
+  (logout)    = "onEvent('logout'    , $event)"
+  (message)   = "onEvent('message'   , $event)"
+  (scan)      = "onEvent('scan'      , $event)"
 >
 
-  <button (click)="wechaty.logoff()">   Logoff</button>
+  <button (click)="wechaty.shutdown()"> Shutdown</button>
 
 </wechaty>
 ```
