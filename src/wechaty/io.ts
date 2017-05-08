@@ -342,6 +342,7 @@ export class IoService {
       this.sendBuffer.push(strEvt)
     }
 
+    // XXX can move this to onOpen?
     if (this.snapshot.readyState === ReadyState.OPEN) {
       this.socketSendBuffer()
     }
@@ -399,7 +400,7 @@ export class IoService {
     // this._websocket = null
   }
 
-  private socketOnClose(event: Event) {
+  private socketOnClose(event: CloseEvent) {
     this.log.verbose('IoService', 'socketOnClose(%s)', event)
 
     this.socketUpdateState()
@@ -418,8 +419,8 @@ export class IoService {
     }
     this._websocket = null
 
-    // if (!e.wasClean) {
-    //   // console.warn('IoService.onClose: e.wasClean FALSE')
-    // }
+    if (!event.wasClean) {
+      this.log.warn('IoService', 'socketOnClose() event.wasClean FALSE')
+    }
   }
 }
