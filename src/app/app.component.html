@@ -1,9 +1,9 @@
 <h1>{{ title }}</h1>
 
-<wechaty-core 
+<wechaty
   #wechaty
   token="WECHATY_TOKEN"
-  
+
   (heartbeat) = "onEvent('heartbeat' , $event)"
   (scan)      = "onEvent('scan'      , $event)"
   (login)     = "onEvent('login'     , $event)"
@@ -11,17 +11,17 @@
   (logout)    = "onEvent('logout'    , $event)"
   (error)     = "onEvent('error'     , $event)"
 >
-  <h2>Wechaty Core Web Component</h2>
+  <h2>Wechaty Web Component for Chatie</h2>
 
   <label for="token">Put Your WECHATY_TOKEN here:</label>
-  <input 
-    type="text" 
-    [(ngModel)]="token" 
+  <input
+    type="text"
+    [(ngModel)]="token"
     name="token"
     placeholder="WECHATY_TOKEN"
-    [style.background-color] = "wechaty.online() ? 'green' : wechaty.connecting() ? 'yellow' : 'red'"
+    [style.background-color] = "stateColor(wechaty) | async"
   >
-  <button (click)="wechaty.token = token">Set Token</button>
+  <button (click)="test(wechaty)">Set Token</button>
 
   <div>
     Event Counter: {{ wechaty.counter }}
@@ -30,13 +30,13 @@
   </div>
 
   <ol>
-    <li 
+    <li
       *ngFor = "let eventName of eventNameList"
     >
       {{ lastEvents[eventName]?.timestamp | date: 'HH:mm:ss' }}
-      : 
-      {{ eventName }} 
-      <blockquote> 
+      :
+      {{ eventName }}
+      <blockquote>
         {{ lastEvents[eventName]?.data | json }}
       </blockquote>
     </li>
@@ -46,7 +46,7 @@
   <button (click)="wechaty.shutdown()"> Shutdown</button>
   <button (click)="wechaty.logoff()">   Logoff</button>
 
-</wechaty-core>
+</wechaty>
 
 <!-- pre>
   {{ lastEvents | json }}

@@ -1,59 +1,84 @@
 {
-  "name": "wechaty-angular-core",
-  "version": "0.0.1",
-  "description": "Wechaty Core Web Component for Angular",
-  "main": "index.ts",
+  "name": "@chatie/angular",
+  "version": "0.1.28",
+  "description": "Chatie Web Component NgModule for Angular",
+  "license": "Apache-2.0",
+  "main": "bundles/wechaty.umd.js",
+  "types": "dist/wechaty.module.d.ts",
   "scripts": {
-    "start": "lite-server start& echo $! > server.pid",
-    "start:fg": "lite-server start",
-    "stop": "kill $(cat server.pid)",
-    "postinstall": "typings install",
-    "lint": "tslint src/**/*.ts",
-    "pretest": "webdriver-manager update",
-    "test": "npm lint && npm run unit && npm run e2e",
-    
-    "posttest": "",
-    "unit": "jasmine --version",
-    "pree2e": "npm start",
-    "e2e": "protractor test/protractor.conf.js",
-    "poste2e": "npm stop"
+    "clean": "shx rm -fr dist/* bundles/*",
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "npm run lint && npm run ngtest && npm run e2e",
+    "ngtest": "ng test --single-run",
+    "lint": "npm run tslint && npm run nglint",
+    "nglint": "ng lint",
+    "tslint": "tslint --project tsconfig.json --type-check src/**/*.ts && tsc --noEmit",
+    "e2e": "ng e2e",
+    "dist": "npm run clean && npm run ngc && npm run rollup && npm run es6to5 && npm run minify:es5",
+    "rollup": "rollup -c",
+    "minify:es5": "uglifyjs ./bundles/wechaty.umd.js --screw-ie8 --compress --mangle --comments --output ./bundles/wechaty.umd.min.js",
+    "es6to5": "tsc --out ./bundles/wechaty.umd.js --target es5 --allowJs bundles/wechaty.es6.umd.js --lib es6,dom",
+    "ngc": "ngc -p src/tsconfig.aot.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zixia/wechaty-angular-core.git"
+    "url": "git+https://github.com/chatie/angular.git"
   },
   "keywords": [
     "wechaty",
-    "wechaty-angular",
-    "WechatyCoreCmp",
-    "wechaty-core"
+    "chatie",
+    "chatbot"
   ],
-  "author": "Zhuohuan LI <zixia@zixia.net>",
-  "license": "MIT",
+  "author": "Huan LI <zixia@zixia.net>",
   "bugs": {
-    "url": "https://github.com/zixia/wechaty-angular-core/issues"
+    "url": "https://github.com/chatie/angular/issues"
   },
-  "homepage": "https://github.com/zixia/wechaty-angular-core#readme",
+  "homepage": "https://github.com/chatie/angular#readme",
+  "dependencies": {},
   "devDependencies": {
-    "jasmine": "^2.4.1",
-    "jasmine-spec-reporter": "^3.0.0",
-    "lite-server": "^2.2.2",
-    "protractor": "^5.0.0",
-    "ts-node": "^2.0.0",
-    "tslint": "^4.0.2",
-    "typescript": "^2.0.0",
-    "typings": "^2.0.0"
-  },
-  "dependencies": {
-    "brolog": "^0.3.6"
+    "@angular/cli": "1.0.1",
+    "@angular/common": "^4.1",
+    "@angular/compiler": "^4.1.0",
+    "@angular/compiler-cli": "^4.1.0",
+    "@angular/core": "^4.1",
+    "@angular/forms": "^4.1",
+    "@angular/http": "^4.1",
+    "@angular/platform-browser": "^4.1",
+    "@angular/platform-browser-dynamic": "^4.1",
+    "@angular/router": "^4.1",
+    "@types/jasmine": "2.5.38",
+    "@types/node": "^6.0.72",
+    "brolog": "^1.1.15",
+    "codelyzer": "^3.0.1",
+    "core-js": "^2.4.1",
+    "jasmine-core": "~2.5.2",
+    "jasmine-spec-reporter": "~3.2.0",
+    "karma": "~1.4.1",
+    "karma-chrome-launcher": "~2.0.0",
+    "karma-cli": "~1.0.1",
+    "karma-coverage-istanbul-reporter": "^0.2.0",
+    "karma-jasmine": "~1.1.0",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "protractor": "~5.1.0",
+    "rollup": "^0.41.6",
+    "rollup-plugin-json": "^2.1.1",
+    "rxjs": "^5.3",
+    "shx": "^0.2.2",
+    "state-switch": "^0.1.15",
+    "ts-node": "~2.0.0",
+    "tslint": "^5.2.0",
+    "typescript": "^2.3.2",
+    "uglify-js": "^2.8.22",
+    "zone.js": "^0.8.4"
   },
   "files": [
+    "bundles/",
+    "dist/",
     "package.json",
     "README.md",
-    "CHANGELOG",
-    "LICENSE",
-    "index.ts",
-    "index.d.ts",
-    "src/"
+    "CHANGELOG.md",
+    "LICENSE"
   ]
 }

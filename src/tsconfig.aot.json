@@ -1,0 +1,45 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../dist",
+    "target": "es6",
+    "module": "es2015",
+    "baseUrl": "",
+    "types": [
+      "node"
+    ],
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    // "mapRoot": "",
+    "skipLibCheck": true
+  }
+  , "files": [
+      "main.ts"
+    , "typings.d.ts"
+    // , "wechaty/wechaty.module.ts"
+    // , "src/app/app.module.ts"
+  ]
+  , "exclude": [
+    "test.ts",
+    "**/*.spec.ts",
+    "./vendor.ts",
+    "./polyfills.ts"
+  ],
+  "angularCompilerOptions": {
+      "strictMetadataEmit": true
+    , "skipTemplateCodegen": false
+    , "genDir": "../aot/"
+    // , "debug": true
+    // , "skipMetadataEmit" : false
+
+  }
+}
