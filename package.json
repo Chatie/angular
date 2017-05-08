@@ -4,7 +4,7 @@
   "description": "Chatie Web Component NgModule for Angular",
   "license": "Apache-2.0",
   "main": "bundles/wechaty.umd.js",
-  "types": "dist/wechaty.module.d.ts",
+  "types": "dist/wechaty/wechaty.module.d.ts",
   "scripts": {
     "clean": "shx rm -fr dist/* aot/* bundles/*",
     "ng": "ng",
