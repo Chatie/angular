@@ -44,6 +44,7 @@ export interface IoServiceSnapshot {
 
 export class IoService {
   public readonly version = version
+  // https://github.com/ReactiveX/rxjs/blob/master/src/observable/dom/WebSocketSubject.ts
   public socket: Subject<IoEvent>
 
   public get readyState() {
@@ -421,6 +422,7 @@ export class IoService {
 
     if (!event.wasClean) {
       this.log.warn('IoService', 'socketOnClose() event.wasClean FALSE')
+      // TODO emit error
     }
   }
 }
