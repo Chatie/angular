@@ -12,7 +12,7 @@
     "build": "ng build",
     "test": "npm run lint && npm run ngtest && npm run e2e",
     "ngtest": "ng test --single-run",
-    "lint": "npm run tslint && npm run nglint",
+    "lint": "npm run tslint && npm run nglint && npm run ngc",
     "nglint": "ng lint",
     "tslint": "tslint --project tsconfig.json --type-check src/**/*.ts && tsc --noEmit",
     "e2e": "ng e2e",
