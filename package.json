@@ -6,7 +6,7 @@
   "main": "bundles/wechaty.umd.js",
   "types": "dist/wechaty.module.d.ts",
   "scripts": {
-    "clean": "shx rm -fr dist/* bundles/*",
+    "clean": "shx rm -fr dist/* aot/* bundles/*",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
