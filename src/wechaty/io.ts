@@ -187,7 +187,7 @@ export class IoService {
   private initStateDealer() {
     this.log.verbose('IoService', 'initStateDealer()')
     this.readyState.filter(s => s === ReadyState.OPEN)
-                  .subscribe(open => this.statusOnOpen())
+                  .subscribe(open => this.stateOnOpen())
   }
 
   /**
@@ -197,31 +197,35 @@ export class IoService {
    *   A socket implementation (example, don't use)
    *  - http://stackoverflow.com/a/34862286/1123955
    */
-  private initRxSocket(): void {
+  private async initRxSocket(): Promise<void> {
     this.log.verbose('IoService', 'initRxSocket()')
 
     if (this.socket) {
       throw new Error('re-init is not permitted')
     }
 
-    // 1. Mobile Originated. moObserver.next() means mobile is sending
-    this.moObserver = {
-      next:     this.socketSend.bind(this),
-      error:    this.socketClose.bind(this),
-      complete: this.socketClose.bind(this),
-    }
+    // wait until the socket subject finish initializing
+    return new Promise<void>(resolve => {
+      // 1. Mobile Originated. moObserver.next() means mobile is sending
+      this.moObserver = {
+        next:     this.socketSend.bind(this),
+        error:    this.socketClose.bind(this),
+        complete: this.socketClose.bind(this),
+      }
 
-    // 2. Mobile Terminated. mtObserver.next() means mobile is receiving
-    const observable = Observable.create((observer: Observer<IoEvent>) => {
-      this.log.verbose('IoService', 'initRxSocket() Observable.create()')
-      this.mtObserver = observer
-      return this.socketClose.bind(this)
+      // 2. Mobile Terminated. mtObserver.next() means mobile is receiving
+      const observable = Observable.create((observer: Observer<IoEvent>) => {
+        this.log.verbose('IoService', 'initRxSocket() Observable.create()')
+        this.mtObserver = observer
+
+        resolve()
+
+        return this.socketClose.bind(this)
+      })
+
+      // 3. Subject for MO & MT Observers
+      this.socket = Subject.create(this.moObserver, observable)
     })
-
-    // 3. Subject for MO & MT Observers
-    this.socket = Subject.create(this.moObserver, observable)
-
-    return
   }
 
   private async connectRxSocket(): Promise<void> {
@@ -276,26 +280,23 @@ export class IoService {
   }
 
   /******************************************************************
-   * Status Event Listeners
+   *
+   * State Event Listeners
    *
    */
-  private statusOnOpen() {
-    this.log.verbose('IoService', 'statusOnOpen()')
+  private stateOnOpen() {
+    this.log.verbose('IoService', 'stateOnOpen()')
 
     this.socketSendBuffer()
-
-    const ioEvent: IoEvent = {
-      name: 'update',
-      payload: 'onOpen',
-    }
-    this.socket.next(ioEvent)
+    this.rpcUpdate('from stateOnOpen()')
   }
 
   /******************************************************************
+   *
    * Io RPC Methods
    *
    */
-  async ding(payload: any): Promise<any> {
+  async rpcDing(payload: any): Promise<any> {
     this.log.verbose('IoService', 'ding(%s)', payload)
 
     const e: IoEvent = {
@@ -304,6 +305,13 @@ export class IoService {
     }
     this.socket.next(e)
     // TODO: get the return value
+  }
+
+  async rpcUpdate(payload: any): Promise<void> {
+    this.socket.next({
+      name:     'update',
+      payload,
+    })
   }
 
   /******************************************************************

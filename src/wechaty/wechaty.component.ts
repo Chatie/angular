@@ -226,7 +226,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
       if (!this.ioService) {
         throw new Error('no ioService')
       }
-      this.ioService.ding(this.counter)
+      this.ioService.rpcDing(this.counter)
       // this.message.emit('#' + this.token + ':' + dong)
     })
 
