@@ -307,6 +307,7 @@ export class IoService {
   }
 
   /******************************************************************
+   *
    * Socket Actions
    *
    */
@@ -326,7 +327,6 @@ export class IoService {
     })
     await future
 
-    this._websocket = null
     return
   }
 
@@ -368,10 +368,17 @@ export class IoService {
     this.log.verbose('IoService', 'socketUpdateState() is %s',
                                   ReadyState[this._websocket.readyState],
                     )
+
+    if (!this._websocket) {
+      this.log.error('IoService', 'socketUpdateState() no _websocket')
+      return
+    }
+
     this._readyState.next(this._websocket.readyState)
   }
 
   /******************************************************************
+   *
    * Socket Events Listener
    *
    */
