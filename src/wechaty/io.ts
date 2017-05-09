@@ -39,13 +39,13 @@ export enum ReadyState {
 
 export interface IoServiceSnapshot {
   readyState: ReadyState
-  socket:     IoEvent
+  event:     IoEvent
 }
 
 export class IoService {
   public readonly version = version
   // https://github.com/ReactiveX/rxjs/blob/master/src/observable/dom/WebSocketSubject.ts
-  public socket: Subject<IoEvent>
+  public event: Subject<IoEvent>
 
   public get readyState() {
     return this._readyState.asObservable()
@@ -94,25 +94,29 @@ export class IoService {
 
     this.snapshot = {
       readyState: ReadyState.CLOSED,
-      socket:     null,
+      event:     null,
     }
     this.readyState.subscribe(s => {
       this.log.silly('IoService', 'init() readyState.subscribe(%s)', ReadyState[s])
       this.snapshot.readyState = s
     })
-    // IMPORTANT! subscribe to it and make it HOT!
-    this.socket.subscribe(e => {
-      this.log.silly('IoService', 'init() socket.subscribe(%s)', e)
-      this.snapshot.socket = e
+    // IMPORTANT: subscribe to event and make it HOT!
+    this.event.subscribe(s => {
+      this.log.silly('IoService', 'init() event.subscribe({name:%s})', s.name)
+      this.snapshot.event = s
     })
 
     return
   }
 
-  public token(newToken?: string): string {
+  public token(): string
+  public token(newToken: string): void
+
+  public token(newToken?: string): string | void {
     this.log.silly('IoService', 'token(%s)', newToken)
     if (newToken) {
       this._token = newToken
+      return
     }
     return this._token
   }
@@ -201,7 +205,7 @@ export class IoService {
   private async initRxSocket(): Promise<void> {
     this.log.verbose('IoService', 'initRxSocket()')
 
-    if (this.socket) {
+    if (this.event) {
       throw new Error('re-init is not permitted')
     }
 
@@ -221,7 +225,7 @@ export class IoService {
     })
 
     // 3. Subject for MO & MT Observers
-    this.socket = Subject.create(this.moObserver, observable.share())
+    this.event = Subject.create(this.moObserver, observable.share())
 
   }
 
@@ -300,12 +304,12 @@ export class IoService {
       name: 'ding',
       payload,
     }
-    this.socket.next(e)
+    this.event.next(e)
     // TODO: get the return value
   }
 
   async rpcUpdate(payload: any): Promise<void> {
-    this.socket.next({
+    this.event.next({
       name:     'update',
       payload,
     })
@@ -342,29 +346,28 @@ export class IoService {
       this.log.silly('IoService', 'socketSend() no _websocket')
     }
 
-    if (ioEvent) {
-      this.log.silly('IoService', 'socketSend() buf len: %d', this.sendBuffer.length)
-      const strEvt = JSON.stringify(ioEvent)
-      this.sendBuffer.push(strEvt)
-    }
+    const strEvt = JSON.stringify(ioEvent)
+    this.sendBuffer.push(strEvt)
 
     // XXX can move this to onOpen?
-    if (this.snapshot.readyState === ReadyState.OPEN) {
-      this.socketSendBuffer()
-    }
+    this.socketSendBuffer()
   }
 
-  private socketSendBuffer() {
+  private socketSendBuffer(): void {
     this.log.silly('IoService', 'socketSendBuffer() length:%s', this.sendBuffer.length)
 
     if (!this._websocket) {
       throw new Error('socketSendBuffer(): no _websocket')
     }
 
-    while (this.sendBuffer.length) {
-      this.log.silly('IoService', 'socketSendBuffer() length: %d', this.sendBuffer.length)
+    if (this._websocket.readyState !== WebSocket.OPEN) {
+      this.log.warn('IoService', 'socketSendBuffer() readyState is not OPEN, send job delayed.')
+      return
+    }
 
+    while (this.sendBuffer.length) {
       const buf = this.sendBuffer.shift()
+      this.log.silly('IoService', 'socketSendBuffer() sending(%s)', buf)
       this._websocket.send(buf)
     }
   }
