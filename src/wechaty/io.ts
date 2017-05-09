@@ -100,6 +100,7 @@ export class IoService {
       this.log.silly('IoService', 'init() readyState.subscribe(%s)', ReadyState[s])
       this.snapshot.readyState = s
     })
+    // IMPORTANT! subscribe to it and make it HOT!
     this.socket.subscribe(e => {
       this.log.silly('IoService', 'init() socket.subscribe(%s)', e)
       this.snapshot.socket = e
@@ -204,28 +205,24 @@ export class IoService {
       throw new Error('re-init is not permitted')
     }
 
-    // wait until the socket subject finish initializing
-    return new Promise<void>(resolve => {
-      // 1. Mobile Originated. moObserver.next() means mobile is sending
-      this.moObserver = {
-        next:     this.socketSend.bind(this),
-        error:    this.socketClose.bind(this),
-        complete: this.socketClose.bind(this),
-      }
+    // 1. Mobile Originated. moObserver.next() means mobile is sending
+    this.moObserver = {
+      next:     this.socketSend.bind(this),
+      error:    this.socketClose.bind(this),
+      complete: this.socketClose.bind(this),
+    }
 
-      // 2. Mobile Terminated. mtObserver.next() means mobile is receiving
-      const observable = Observable.create((observer: Observer<IoEvent>) => {
-        this.log.verbose('IoService', 'initRxSocket() Observable.create()')
-        this.mtObserver = observer
+    // 2. Mobile Terminated. mtObserver.next() means mobile is receiving
+    const observable = Observable.create((observer: Observer<IoEvent>) => {
+      this.log.verbose('IoService', 'initRxSocket() Observable.create()')
+      this.mtObserver = observer
 
-        resolve()
-
-        return this.socketClose.bind(this)
-      })
-
-      // 3. Subject for MO & MT Observers
-      this.socket = Subject.create(this.moObserver, observable)
+      return this.socketClose.bind(this)
     })
+
+    // 3. Subject for MO & MT Observers
+    this.socket = Subject.create(this.moObserver, observable.share())
+
   }
 
   private async connectRxSocket(): Promise<void> {
