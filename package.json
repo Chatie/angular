@@ -1,6 +1,6 @@
 {
   "name": "@chatie/angular",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "Chatie Web Component NgModule for Angular",
   "license": "Apache-2.0",
   "main": "bundles/wechaty.umd.js",
