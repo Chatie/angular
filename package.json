@@ -73,6 +73,11 @@
     "uglify-js": "^2.8.22",
     "zone.js": "^0.8.4"
   },
+  "peerDependencies": {
+    "brolog": ">=1",
+    "rxjs": ">=5",
+    "state-switch": "*"
+  },
   "files": [
     "bundles/",
     "dist/",
