@@ -47,10 +47,10 @@ export class IoService {
   // https://github.com/ReactiveX/rxjs/blob/master/src/observable/dom/WebSocketSubject.ts
   public event: Subject<IoEvent>
 
+  private _readyState: BehaviorSubject<ReadyState>
   public get readyState() {
     return this._readyState.asObservable()
   }
-  private _readyState: BehaviorSubject<ReadyState>
 
   public snapshot: IoServiceSnapshot
 
@@ -80,6 +80,11 @@ export class IoService {
       throw new Error('re-init')
     }
 
+    this.snapshot = {
+      readyState: ReadyState.CLOSED,
+      event:     null,
+    }
+
     this._readyState = new BehaviorSubject<ReadyState>(ReadyState.CLOSED)
     this.stateSwitch = new StateSwitch<'open', 'close'>('IoService', 'close', this.log)
     this.stateSwitch.setLog(this.log)
@@ -92,10 +97,6 @@ export class IoService {
       throw e
     }
 
-    this.snapshot = {
-      readyState: ReadyState.CLOSED,
-      event:     null,
-    }
     this.readyState.subscribe(s => {
       this.log.silly('IoService', 'init() readyState.subscribe(%s)', ReadyState[s])
       this.snapshot.readyState = s
@@ -251,6 +252,7 @@ export class IoService {
       this.log.verbose('IoService', 'connectRxSocket() Promise()')
 
       const id = setTimeout(() => {
+        this._websocket = null
         const e = new Error('rxSocket connect timeout after '
                             + Math.round(this.CONNECT_TIMEOUT / 1000),
                           )
