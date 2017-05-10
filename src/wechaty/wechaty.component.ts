@@ -116,6 +116,9 @@ export class WechatyComponent implements OnInit, OnDestroy {
     this.ioService = new IoService()
     await this.ioService.init()
 
+    this.ioService.event.subscribe(this.onIo.bind(this))
+    this.log.silly('WechatyComponent', 'ngOninit() ioService.event.subscribe()-ed')
+
     /**
      * @Input(token) is not inittialized in constructor()
      */
@@ -123,8 +126,6 @@ export class WechatyComponent implements OnInit, OnDestroy {
       this.ioService.token(this.token)
       await this.ioService.start()
     }
-
-    this.ioService.socket.subscribe(this.onIo.bind(this))
 
     // this.startTimer()
   }
@@ -190,7 +191,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
     if (!this.ioService) {
       throw new Error('no ioService')
     }
-    this.ioService.socket.next(resetEvent)
+    this.ioService.event.next(resetEvent)
   }
 
   public shutdown(reason: string) {
@@ -203,7 +204,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
     if (!this.ioService) {
       throw new Error('no ioService')
     }
-    this.ioService.socket.next(shutdownEvent)
+    this.ioService.event.next(shutdownEvent)
   }
 
   startTimer() {
@@ -226,7 +227,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
       if (!this.ioService) {
         throw new Error('no ioService')
       }
-      this.ioService.ding(this.counter)
+      this.ioService.rpcDing(this.counter)
       // this.message.emit('#' + this.token + ':' + dong)
     })
 
@@ -254,7 +255,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
       name: 'logout',
       payload: reason,
     }
-    this.ioService.socket.next(quitEvent)
+    this.ioService.event.next(quitEvent)
   }
 
   public get readyState() {
