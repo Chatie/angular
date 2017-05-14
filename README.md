@@ -45,10 +45,10 @@ import { WechatyModule }  from '@chatie/angular'
   (message)   = "onEvent('message'   , $event)"
   (scan)      = "onEvent('scan'      , $event)"
 >
-
-  <button (click)="wechaty.shutdown()"> Shutdown</button>
-
 </wechaty>
+
+<button (click)="wechaty.shutdown()"> Shutdown</button>
+
 ```
 
 Moer details, see code. ;-]
