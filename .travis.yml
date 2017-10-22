@@ -7,17 +7,17 @@ node_js:
   - '7'
   - '8'
 
-addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+# addons:
+#   apt:
+#     sources:
+#       - google-chrome
+#     packages:
+#       - google-chrome-stable
 
-before_install:
-  - export CHROME_BIN=/usr/bin/google-chrome
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+# before_install:
+#   - export CHROME_BIN=/usr/bin/google-chrome
+#   - export DISPLAY=:99.0
+#   - sh -e /etc/init.d/xvfb start
 
 branches:
   only:
