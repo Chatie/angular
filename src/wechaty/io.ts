@@ -154,7 +154,7 @@ export class IoService {
     this.log.verbose('IoService', 'stop()')
 
     if (this.state.off()) {
-      this.log.warn('IoService', 'stop() state target is already ')
+      this.log.warn('IoService', 'stop() state is already off')
       if (this.state.pending()) {
         throw new Error('state pending() is true')
       }
