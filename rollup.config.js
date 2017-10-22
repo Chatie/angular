@@ -8,6 +8,7 @@ export default {
   moduleName: 'chatie.wechaty',
   globals: {
     '@angular/core': 'ng.core',
+    'rxjs/Rx': 'Rx',
     'rxjs/Observable': 'Rx',
     'rxjs/ReplaySubject': 'Rx',
     'rxjs/add/operator/map': 'Rx.Observable.prototype',
