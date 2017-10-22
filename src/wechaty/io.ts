@@ -5,10 +5,10 @@ import {
   Observable,
   Observer,
   Subject,
-}                       from 'rxjs/Rx'
+}                   from 'rxjs/Rx'
 
-import { Brolog }       from 'brolog'
-import { StateSwitch }  from 'state-switch'
+import Brolog       from 'brolog'
+import StateSwitch  from 'state-switch'
 
 export type WechatyEventName =
     'scan'
@@ -67,7 +67,7 @@ export class IoService {
   private mtObserver: Observer<IoEvent> // Mobile Terminated. mtObserver.next() means mobile is receiving
   private sendBuffer: string[] = []
 
-  private stateSwitch: StateSwitch<'open', 'close'>
+  private state: StateSwitch
 
   constructor() {
     this.log.verbose('IoService', 'constructor() v%s', this.version)
@@ -76,7 +76,7 @@ export class IoService {
   public async init(): Promise<void> {
     this.log.verbose('IoService', 'init()')
 
-    if (this.stateSwitch) {
+    if (this.state) {
       throw new Error('re-init')
     }
 
@@ -86,8 +86,8 @@ export class IoService {
     }
 
     this._readyState = new BehaviorSubject<ReadyState>(ReadyState.CLOSED)
-    this.stateSwitch = new StateSwitch<'open', 'close'>('IoService', 'close', this.log)
-    this.stateSwitch.setLog(this.log)
+    this.state = new StateSwitch('IoService', this.log)
+    this.state.setLog(this.log)
 
     try {
       await this.initStateDealer()
@@ -129,42 +129,39 @@ export class IoService {
       throw new Error('start() without token')
     }
 
-    if (this.stateSwitch.target() === 'open') {
-      throw new Error('stateSwitch target is already `open`')
+    if (this.state.on()) {
+      throw new Error('state is already ON')
     }
-    if (this.stateSwitch.inprocess()) {
-      throw new Error('stateSwitch inprocess() is true')
+    if (this.state.pending()) {
+      throw new Error('state is pending')
     }
 
-    this.stateSwitch.target('open')
-    this.stateSwitch.current('open', false)
+    this.state.on('pending')
 
     this.autoReconnect = true
 
     try {
       await this.connectRxSocket()
-      this.stateSwitch.current('open', true)
+      this.state.on(true)
     } catch (e) {
       this.log.warn('IoService', 'start() failed:%s', e.message)
 
-      this.stateSwitch.target('close')
-      this.stateSwitch.current('close', true)
+      this.state.off(true)
     }
   }
 
   async stop(): Promise<void> {
     this.log.verbose('IoService', 'stop()')
 
-    if (this.stateSwitch.target() === 'close') {
-      this.log.warn('IoService', 'stop() stateSwitch target is already `close`')
-      if (this.stateSwitch.inprocess()) {
-        throw new Error('stateSwitch inprocess() is true')
+    if (this.state.off()) {
+      this.log.warn('IoService', 'stop() state target is already ')
+      if (this.state.pending()) {
+        throw new Error('state pending() is true')
       }
       return
     }
 
-    this.stateSwitch.target('close')
-    this.stateSwitch.current('close', false)
+    this.state.off('pending')
 
     this.autoReconnect = false
 
@@ -173,7 +170,7 @@ export class IoService {
     }
 
     await this.socketClose(1000, 'IoService.stop()')
-    this.stateSwitch.current('close', true)
+    this.state.off(true)
 
     return
   }
@@ -238,11 +235,13 @@ export class IoService {
       throw new Error('already has a websocket')
     }
 
-    if (this.stateSwitch.target() !== 'open'
-      || this.stateSwitch.current() !== 'open'
-      || this.stateSwitch.stable()
-    ) {
-      throw new Error('switch state not right')
+    // if (this.state.target() !== 'open'
+    //   || this.state.current() !== 'open'
+    //   || this.state.stable()
+    if (this.state.off()) {
+      throw new Error('switch state is off')
+    } else if (!this.state.pending()) {
+      throw new Error('switch state is already ON')
     }
 
     this._websocket = new WebSocket(this.endPoint(), this.PROTOCOL)
@@ -435,14 +434,13 @@ export class IoService {
      * reconnect inside onClose
      */
     if (this.autoReconnect) {
-      this.stateSwitch.current('open', false)
+      this.state.on('pending')
       setTimeout(async () => {
         await this.connectRxSocket()
-        this.stateSwitch.current('open', true)
+        this.state.on(true)
       }, 1000)
     } else {
-      this.stateSwitch.target('close')
-      this.stateSwitch.current('close', true)
+      this.state.off(true)
     }
     this._websocket = null
 
