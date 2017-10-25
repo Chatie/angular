@@ -436,8 +436,13 @@ export class IoService {
     if (this.autoReconnect) {
       this.state.on('pending')
       setTimeout(async () => {
-        await this.connectRxSocket()
-        this.state.on(true)
+        try {
+          await this.connectRxSocket()
+          this.state.on(true)
+        } catch (e) {
+          this.log.warn('IoService', 'socketOnClose() autoReconnect() exception: %s', e)
+          this.state.off(true)
+        }
       }, 1000)
     } else {
       this.state.off(true)
