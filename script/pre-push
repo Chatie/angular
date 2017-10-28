@@ -18,7 +18,7 @@ set -e
 npm run lint
 
 [ -z "$CYGWIN" ] && {
-  rm package-lock.json
+  rm package-lock.json || true
   npm version patch --no-package-lock
 
   # git rebase
