@@ -15,7 +15,7 @@
     "test:e2e": "ng e2e",
     "lint": "npm run lint:ts && npm run lint:ng && npm run ngc",
     "lint:ng": "ng lint",
-    "lint:ts": "tslint --project tsconfig.json src/**/*.ts && tsc --noEmit",
+    "lint:ts": "tslint --project tsconfig.json && tsc --noEmit",
     "dist": "npm run clean && npm run ngc && npm run rollup && npm run es6to5 && npm run minify:es5",
     "rollup": "rollup -c",
     "minify:es5": "uglifyjs ./bundles/wechaty.umd.js --screw-ie8 --compress --mangle --comments --output ./bundles/wechaty.umd.min.js",

@@ -16,7 +16,11 @@
       "es2016",
       "dom"
     ]
-  }
+  },
+  "include": [
+    "e2e/**/*.ts",
+    "src/**/*.ts"
+  ]
   , "exclude": [
       "aot/"
     , "node_modules/"
