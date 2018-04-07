@@ -5,7 +5,7 @@ export default {
   dest: 'bundles/wechaty.es6.umd.js',
   sourceMap: true,
   format: 'umd',
-  moduleName: 'chatie.wechaty',
+  moduleName: 'chatie.angular',
   globals: {
     '@angular/core': 'ng.core',
     'rxjs/Rx': 'Rx',
