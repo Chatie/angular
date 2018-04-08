@@ -10,7 +10,7 @@ set -e
 
 [ -n "$NO_HOOK" ] && exit 0
 
-[ -n "$WECHATY_INNER_PRE_HOOK" ] && {
+[ -n "$HUAN_INNER_PRE_HOOK" ] && {
   # http://stackoverflow.com/a/21334985/1123955
   exit 0
 }
@@ -18,11 +18,10 @@ set -e
 npm run lint
 
 [ -z "$CYGWIN" ] && {
-  rm package-lock.json || true
-  npm version patch --no-package-lock
-
   # git rebase
-  WECHATY_INNER_PRE_HOOK=1 git push
+  rm -f package-lock.json
+  npm version patch --no-package-lock
+  HUAN_INNER_PRE_HOOK=1 git push
 
   cat <<'_STR_'
   ____ _ _        ____            _
@@ -46,6 +45,7 @@ _STR_
   echo " ------- vvvvvvv outer push will be canceled, never mind vvvvvvv -------"
   echo
   echo
+  echo
   exit 127
 }
 
@@ -53,3 +53,4 @@ _STR_
 # or will whow a error: error: failed to push some refs to 'git@github.com:wechaty/wechaty.git'
 echo "PRE-PUSH HOOK PASSED"
 echo
+
