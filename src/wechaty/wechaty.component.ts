@@ -1,4 +1,4 @@
-import { version } from '../../package.json'
+import { VERSION } from '../config'
 
 import {
   Component,
@@ -98,8 +98,6 @@ export class WechatyComponent implements OnInit, OnDestroy {
 
   private ioService: IoService
 
-  public version = version
-
   counter = 0
   timestamp = new Date()
 
@@ -107,7 +105,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
     private log:    Brolog,
     private ngZone: NgZone,
   ) {
-    this.log.verbose('WechatyComponent', 'constructor() v%s', this.version)
+    this.log.verbose('WechatyComponent', 'constructor() v%s', VERSION)
   }
 
   async ngOnInit() {

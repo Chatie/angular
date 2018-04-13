@@ -1,4 +1,4 @@
-import { version }      from '../../package.json'
+import { VERSION }      from '../config'
 
 import {
   BehaviorSubject,
@@ -43,7 +43,6 @@ export interface IoServiceSnapshot {
 }
 
 export class IoService {
-  public readonly version = version
   // https://github.com/ReactiveX/rxjs/blob/master/src/observable/dom/WebSocketSubject.ts
   public event: Subject<IoEvent>
 
@@ -70,7 +69,7 @@ export class IoService {
   private state: StateSwitch
 
   constructor() {
-    this.log.verbose('IoService', 'constructor() v%s', this.version)
+    this.log.verbose('IoService', 'constructor()')
   }
 
   public async init(): Promise<void> {

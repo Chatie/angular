@@ -1,55 +1,52 @@
 {
   "name": "@chatie/angular",
-  "version": "0.1.46",
-  "description": "Chatie Web Component NgModule for Angular",
+  "version": "0.2.2",
+  "description": "Wechaty Component NgModule",
   "license": "Apache-2.0",
-  "main": "bundles/wechaty.umd.js",
-  "types": "dist/wechaty/wechaty.module.d.ts",
   "scripts": {
-    "clean": "shx rm -fr dist/* aot/* bundles/*",
-    "ng": "ng",
-    "start": "ng serve",
     "build": "ng build",
-    "test": "npm run lint && npm run test:ng && npm run test:e2e",
-    "test:ng": "ng test --single-run",
-    "test:e2e": "ng e2e",
+    "clean": "shx rm -fr dist/* aot/* bundles/*",
     "lint": "npm run lint:ts && npm run lint:ng && npm run ngc",
     "lint:ng": "ng lint",
     "lint:ts": "tslint --project tsconfig.json && tsc --noEmit",
-    "dist": "npm run clean && npm run ngc && npm run rollup && npm run es6to5 && npm run minify:es5",
-    "rollup": "rollup -c",
-    "minify:es5": "uglifyjs ./bundles/wechaty.umd.js --screw-ie8 --compress --mangle --comments --output ./bundles/wechaty.umd.min.js",
-    "es6to5": "tsc --out ./bundles/wechaty.umd.js --target es5 --allowJs bundles/wechaty.es6.umd.js --lib es6,dom",
-    "ngc": "ngc -p src/tsconfig.aot.json"
+    "ng": "ng",
+    "ng:packagr": "ng-packagr -p package.json",
+    "ngc": "ngc -p src/tsconfig.aot.json",
+    "start": "ng serve",
+    "test": "npm run lint && npm run test:unit && npm run test:e2e",
+    "test:e2e": "ng e2e",
+    "test:unit": "ng test --single-run"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chatie/angular.git"
   },
   "keywords": [
-    "wechaty",
+    "angular",
+    "ngmodule",
+    "chatbot",
     "chatie",
-    "chatbot"
+    "wechat",
+    "wechaty"
   ],
   "author": "Huan LI <zixia@zixia.net>",
   "bugs": {
     "url": "https://github.com/chatie/angular/issues"
   },
   "homepage": "https://github.com/chatie/angular#readme",
-  "dependencies": {},
   "devDependencies": {
-    "@angular/cli": "1.0.1",
-    "@angular/common": "^4.1",
-    "@angular/compiler": "^4.1.0",
-    "@angular/compiler-cli": "^4.1.0",
-    "@angular/core": "^4.1",
-    "@angular/forms": "^4.1",
-    "@angular/http": "^4.1",
-    "@angular/platform-browser": "^4.1",
-    "@angular/platform-browser-dynamic": "^4.1",
-    "@angular/router": "^4.1",
-    "@types/jasmine": "^2.5.38",
-    "@types/node": "^6.0.90",
+    "@angular/cli": "^1.7.4",
+    "@angular/common": "^5.2.9",
+    "@angular/compiler": "^5.2.9",
+    "@angular/compiler-cli": "^5.2.9",
+    "@angular/core": "^5.2.9",
+    "@angular/forms": "^5.2.9",
+    "@angular/http": "^5.2.9",
+    "@angular/platform-browser": "^5.2.9",
+    "@angular/platform-browser-dynamic": "^5.2.9",
+    "@angular/router": "^5.2.9",
+    "@types/jasmine": "^2.8.6",
+    "@types/node": "^9.6.5",
     "brolog": "^1.2.17",
     "codelyzer": "^3.0.1",
     "core-js": "^2.4.1",
@@ -62,6 +59,7 @@
     "karma-coverage-istanbul-reporter": "^0.2.0",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ng-packagr": "^2.4.2",
     "protractor": "~5.1.0",
     "puppeteer": "^0.12.0",
     "rollup": "^0.41.6",
@@ -70,6 +68,7 @@
     "shx": "^0.2.2",
     "state-switch": "^0.2.3",
     "ts-node": "^5.0.1",
+    "tsickle": "^0.27.5",
     "tslint": "^5.9.1",
     "typescript": "^2.8.1",
     "uglify-js": "^2.8.22",
@@ -92,5 +91,12 @@
     "scripts": {
       "pre-push": "bash ./scripts/pre-push.sh"
     }
+  },
+  "dependencies": {},
+  "ngPackage": {
+    "lib": {
+      "entryFile": "public_api.ts"
+    },
+    "whitelistedNonPeerDependencies": []
   }
 }

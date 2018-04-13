@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/Chatie/angular.svg?branch=master)](https://travis-ci.org/Chatie/angular) [![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular)
 
-Chatie Web Component NgModule for Angular 4
+Wechaty Web Component NgModule Powered by Angular 5 & ng-packagr
 
-![Angular Library](http://www.dzurico.com/wp-content/uploads/2016/12/library-in-angular.jpg)
+![Angular Library](https://chatie.github.io/angular/images/library-in-angular.jpg)
 
 > Picture credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
 
@@ -12,7 +12,7 @@ Chatie Web Component NgModule for Angular 4
 
 ### Demo
 
-<http://chatie.github.io/angular/>
+<https://chatie.github.io/angular/>
 
 Talk is cheap, show me the code:
 
@@ -67,14 +67,20 @@ Moer details, see code. ;-]
 
 * [Working with scoped packages](https://docs.npmjs.com/getting-started/scoped-packages)
 
-## Version History
+# CHANGELOG
 
-### v0.1.0 (May 2017)
+## v0.2 master (Apr 2018)
+
+1. Upgrade Angular 5
+1. use `ng-packagr` for packing
+
+## v0.1 (May 2017)
 
 1. Upgrade Angular 4.1
 1. NgModule-ize Wachaty Component
+1. Playground: <https://chatie.github.io/angular/>
 
-### v0.0.1 (Jul 2016)
+## v0.0.1 (Jul 2016)
 
 1. Modulized Angular 2 Component: `wechaty-core`
 1. Support all(and same) IO Events of [Wechaty](https://github.com/chatie/wechaty)

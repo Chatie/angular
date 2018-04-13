@@ -32,9 +32,9 @@ describe('IoService', () => {
     expect(ioService).toBeTruthy()
   })
 
-  it('should has version', () => {
-    const ioService = new IoService()
-    expect(/^\d+\.\d+\.\d+$/.test(ioService.version)).toBeTruthy()
-  })
+  // it('should has version', () => {
+  //   const ioService = new IoService()
+  //   expect(/^\d+\.\d+\.\d+$/.test(ioService.version)).toBeTruthy()
+  // })
 
 })
