@@ -36,8 +36,9 @@ jobs:
 
     - stage: deploy
       script:
-        - echo "Deploying to NPM ..."
+        - echo "Packing NgModule ..."
         - npm run ng:packagr
+        - echo "Deploying to NPM ..."
 
       before_deploy:
         - cd dist/
