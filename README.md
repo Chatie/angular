@@ -1,4 +1,4 @@
-# @chatie/angular
+# WECHATY NGMODULE
 
 [![Build Status](https://travis-ci.org/Chatie/angular.svg?branch=master)](https://travis-ci.org/Chatie/angular) [![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular)
 
@@ -12,7 +12,7 @@ Wechaty Web Component NgModule Powered by Angular 5 & ng-packagr
 
 ### Demo
 
-<https://chatie.github.io/angular/>
+<https://chatie.io/angular/>
 
 Talk is cheap, show me the code:
 
@@ -71,14 +71,14 @@ Moer details, see code. ;-]
 
 ## v0.2 master (Apr 2018)
 
-1. Upgrade Angular 5
-1. use `ng-packagr` for packing
+1. Upgrade Angular from v4 to v5
+1. use `ng-packagr` to pack NgModule
 
 ## v0.1 (May 2017)
 
-1. Upgrade Angular 4.1
+1. Upgrade Angular from v2 to v4
 1. NgModule-ize Wachaty Component
-1. Playground: <https://chatie.github.io/angular/>
+1. Playground: <https://chatie.io/angular/>
 
 ## v0.0.1 (Jul 2016)
 
@@ -89,16 +89,16 @@ Moer details, see code. ;-]
 
 Github Issue - https://github.com/chatie/angular/issues
 
-## Author
+# AUTHOR
 
-Zhuohuan LI <zixia@zixia.net> (http://linkedin.com/in/zixia)
+Huan LI <zixia@zixia.net> (http://linkedin.com/in/zixia)
 
 <a href="http://stackoverflow.com/users/1123955/zixia">
   <img src="http://stackoverflow.com/users/flair/1123955.png" width="208" height="58" alt="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
 </a>
 
-## Copyright & License
+# COPYRIGHT & LICENSE
 
-* Code & Docs ©2016-2017 zixia
-* Code released under the MIT license
+* Code & Docs ©2016-2018 zixia
+* Code released under the Apache-2.0 license
 * Docs released under Creative Commons
