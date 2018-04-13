@@ -76,14 +76,6 @@
     "rxjs": ">=5",
     "state-switch": "*"
   },
-  "files": [
-    "bundles/",
-    "dist/",
-    "package.json",
-    "README.md",
-    "CHANGELOG.md",
-    "LICENSE"
-  ],
   "git": {
     "scripts": {
       "pre-push": "bash ./scripts/pre-push.sh"
