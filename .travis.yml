@@ -25,6 +25,7 @@ stages:
 jobs:
   include:
     - stage: test
+      install: travis_retry npm install
       script:
         - echo $TRAVIS_OS_NAME
         - node --version
@@ -35,8 +36,6 @@ jobs:
     - stage: deploy
       script:
         - echo "Deploying to NPM ..."
-        - npm version
-        - ng --version
         - npm run ng:packagr
 
       before_deploy:
