@@ -22,7 +22,6 @@ stages:
   - name: deploy
     if: branch =~ ^(master|v\d+\.\d+)
 
-
 jobs:
   include:
     - stage: test
@@ -30,6 +29,7 @@ jobs:
         - echo $TRAVIS_OS_NAME
         - node --version
         - npm --version
+        - ng --version
         - npm test
 
     - stage: deploy
