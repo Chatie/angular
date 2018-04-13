@@ -49,3 +49,4 @@ chatie-angular-*.*.*.tgz
 aot/
 bundles/
 /package-lock.json
+/dist.tgz

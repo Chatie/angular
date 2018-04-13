@@ -5,7 +5,6 @@ os:
 language: node_js
 node_js:
   - '9'
-  - '8'
 
 addons:
   apt:
@@ -14,37 +13,42 @@ addons:
     packages:
       - google-chrome-stable
 
-# before_install:
-#   - export CHROME_BIN=/usr/bin/google-chrome
-#   - export DISPLAY=:99.0
-#   - sh -e /etc/init.d/xvfb start
-
-branches:
-  only:
-  - master
-
 cache:
   directories:
     - node_modules
 
-script:
-  - node --version
-  - npm --version
-  - npm run lint
-  - npm run dist
-  - npm test
+stages:
+  - test
+  - name: deploy
+    if: branch =~ ^(master|v\d+\.\d+)
+
+
+jobs:
+  include:
+    - stage: test
+      script:
+        - echo $TRAVIS_OS_NAME
+        - node --version
+        - npm --version
+        - npm test
+
+    - stage: deploy
+      script:
+        - echo "Deploying to NPM ..."
+        - npm version
+        - ng --version
+        - npm run ng:packagr
+
+      before_deploy:
+        - cd dist/
+
+      deploy:
+        provider: npm
+        email: zixia@zixia.net
+        api_key: "$NPM_TOKEN"
+        skip_cleanup: true
 
 notifications:
   email:
     on_success: change
     on_failure: change
-
-before_deploy:
-  - npm version
-  - npm run dist
-
-deploy:
-  provider: npm
-  email: dev@chatie.io
-  api_key: "$NPM_TOKEN"
-  skip_cleanup: true

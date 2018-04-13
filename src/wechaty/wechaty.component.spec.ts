@@ -32,8 +32,8 @@ describe('WechatyComponent', () => {
     expect(component).toBeTruthy()
   })
 
-  it('should has version', () => {
-    const versionRegex = /^\d+\.\d+\.\d+$/
-    expect(versionRegex.test(component.version)).toBeTruthy()
-  })
+  // it('should has version', () => {
+  //   const versionRegex = /^\d+\.\d+\.\d+$/
+  //   expect(versionRegex.test(component.version)).toBeTruthy()
+  // })
 })

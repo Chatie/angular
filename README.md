@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/Chatie/angular.svg?branch=master)](https://travis-ci.org/Chatie/angular) [![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular)
 
-Chatie Web Component NgModule for Angular 4
+Wechaty Web Component NgModule Powered by Angular 5 & ng-packagr
 
-![Angular Library](http://www.dzurico.com/wp-content/uploads/2016/12/library-in-angular.jpg)
+![Angular Library](https://chatie.github.io/angular/images/library-in-angular.jpg)
 
 > Picture credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
 
@@ -12,7 +12,7 @@ Chatie Web Component NgModule for Angular 4
 
 ### Demo
 
-<http://chatie.github.io/angular/>
+<https://chatie.github.io/angular/>
 
 Talk is cheap, show me the code:
 

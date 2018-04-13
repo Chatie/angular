@@ -1,13 +1,16 @@
-import { BrowserModule } from '@angular/platform-browser'
-import { NgModule } from '@angular/core'
-import { FormsModule } from '@angular/forms'
-import { HttpModule } from '@angular/http'
+import { BrowserModule }  from '@angular/platform-browser'
+import { NgModule }       from '@angular/core'
+import { FormsModule }    from '@angular/forms'
+import { HttpModule }     from '@angular/http'
 
-import { Brolog }         from 'brolog'
+import {
+  log,
+  Brolog,
+}                         from 'brolog'
 
-import { WechatyModule } from '../wechaty/wechaty.module'
+import { WechatyModule }  from '../wechaty/wechaty.module'
 
-import { AppComponent } from './app.component'
+import { AppComponent }   from './app.component'
 
 @NgModule({
   declarations: [
@@ -21,10 +24,10 @@ import { AppComponent } from './app.component'
   ],
   providers: [
     {
-      provide: Brolog,
-      useFactory() { return Brolog.instance('silly') },
+      provide:  Brolog,
+      useValue: log,
     },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
