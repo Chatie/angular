@@ -1,6 +1,8 @@
 # WECHATY NGMODULE
 
-[![Build Status](https://travis-ci.org/Chatie/angular.svg?branch=master)](https://travis-ci.org/Chatie/angular) [![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular)
+[![Build Status](https://travis-ci.org/Chatie/angular.svg?branch=master)](https://travis-ci.org/Chatie/angular)
+[![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular)
+(https://badges.greenkeeper.io/Chatie/db.svg)](https://greenkeeper.io/)
 
 Wechaty Web Component NgModule Powered by Angular 5 & ng-packagr
 
