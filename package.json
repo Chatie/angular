@@ -44,7 +44,7 @@
     "@angular/http": "^5.2.9",
     "@angular/platform-browser": "^5.2.9",
     "@angular/platform-browser-dynamic": "^5.2.9",
-    "@angular/router": "^5.2.9",
+    "@angular/router": "^6.0.0",
     "@types/jasmine": "^2.8.6",
     "@types/node": "^10.0.3",
     "brolog": "^1.2.17",
