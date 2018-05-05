@@ -10,7 +10,7 @@ Wechaty Web Component NgModule Powered by Angular 5 & ng-packagr
 
 > Picture credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
 
-## TL;DR
+## USAGE
 
 ### Demo
 
@@ -55,7 +55,7 @@ import { WechatyModule }  from '@chatie/angular'
 
 Moer details, see code. ;-]
 
-## Reference
+## REFERENCES
 
 * [How to build and publish an Angular module](https://medium.com/@cyrilletuzi/how-to-build-and-publish-an-angular-module-7ad19c0b4464)
 * [Understanding Angular modules (NgModule) and their scopes](https://medium.com/@cyrilletuzi/understanding-angular-modules-ngmodule-and-their-scopes-81e4ed6f7407)
@@ -65,33 +65,37 @@ Moer details, see code. ;-]
 * [Ahead-of-Time Compilation in Angular](http://blog.mgechev.com/2016/08/14/ahead-of-time-compilation-angular-offline-precompilation/)
 * [Plunker - Adding the embed to your website](https://ggoodman.gitbooks.io/plunker/content/embed.html)
 
-### NPM
+## NPM
 
 * [Working with scoped packages](https://docs.npmjs.com/getting-started/scoped-packages)
 
-# CHANGELOG
+## CHANGELOG
 
-## v0.2 master (Apr 2018)
+### v0.3 master (May 2018)
+
+1. Support CI/CD to NPM@next
+
+### v0.2 (Apr 2018)
 
 1. Upgrade Angular from v4 to v5
 1. use `ng-packagr` to pack NgModule(instead of tsc&rollup by hand)
 
-## v0.1 (May 2017)
+### v0.1 (May 2017)
 
 1. Upgrade Angular from v2 to v4
 1. NgModule-ize Wachaty Component
 1. Playground: <https://chatie.io/angular/>
 
-## v0.0.1 (Jul 2016)
+### v0.0.1 (Jul 2016)
 
 1. Modulized Angular 2 Component: `wechaty-core`
 1. Support all(and same) IO Events of [Wechaty](https://github.com/chatie/wechaty)
 
-## Known Issues & Support
+## SUPPORT
 
 Github Issue - https://github.com/chatie/angular/issues
 
-# AUTHOR
+## AUTHOR
 
 Huan LI <zixia@zixia.net> (http://linkedin.com/in/zixia)
 
@@ -99,7 +103,7 @@ Huan LI <zixia@zixia.net> (http://linkedin.com/in/zixia)
   <img src="http://stackoverflow.com/users/flair/1123955.png" width="208" height="58" alt="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
 </a>
 
-# COPYRIGHT & LICENSE
+## COPYRIGHT & LICENSE
 
 * Code & Docs ©2016-2018 zixia
 * Code released under the Apache-2.0 license
