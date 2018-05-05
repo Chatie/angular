@@ -1,6 +1,6 @@
 {
   "name": "@chatie/angular",
-  "version": "0.2.10",
+  "version": "0.3.0",
   "description": "Wechaty Component NgModule",
   "license": "Apache-2.0",
   "scripts": {
