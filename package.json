@@ -85,6 +85,10 @@
     }
   },
   "dependencies": {},
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
   "ngPackage": {
     "lib": {
       "entryFile": "public_api.ts"
