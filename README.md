@@ -74,7 +74,7 @@ Moer details, see code. ;-]
 ## v0.2 master (Apr 2018)
 
 1. Upgrade Angular from v4 to v5
-1. use `ng-packagr` to pack NgModule
+1. use `ng-packagr` to pack NgModule(instead of tsc&rollup by hand)
 
 ## v0.1 (May 2017)
 
