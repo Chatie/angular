@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/chatie/angular#readme",
   "devDependencies": {
-    "@angular/cli": "^1.7.4",
+    "@angular/cli": "^6.0.2",
     "@angular/common": "^5.2.9",
     "@angular/compiler": "^5.2.9",
     "@angular/compiler-cli": "^5.2.9",
