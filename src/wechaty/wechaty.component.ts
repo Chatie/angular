@@ -14,7 +14,13 @@ import {
   Observable,
   Subject,
   Subscription,
-}                   from 'rxjs/Rx'
+  interval,
+}                   from 'rxjs'
+import {
+  share,
+  tap,
+  takeUntil,
+}                   from 'rxjs/operators'
 
 import { Brolog }   from 'brolog'
 
@@ -212,11 +218,13 @@ export class WechatyComponent implements OnInit, OnDestroy {
     // https://github.com/angular/protractor/issues/3349#issuecomment-232253059
     // https://github.com/juliemr/ngconf-2016-zones/blob/master/src/app/main.ts#L38
     this.ngZone.runOutsideAngular(() => {
-      this.timer = Observable.interval(3000)
-          .do(i => { this.log.verbose('do', ' %d', i) })
-          .takeUntil(this.ender)
-          // .publish()
-          .share()
+      this.timer = interval(3000).pipe(
+        tap(i => { this.log.verbose('do', ' %d', i) }),
+        takeUntil(this.ender),
+        share(),
+      )
+      // .publish()
+
     })
 
     this.timerSub = this.timer.subscribe(t => {
