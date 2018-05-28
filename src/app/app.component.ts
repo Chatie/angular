@@ -1,7 +1,10 @@
 import { Component }    from '@angular/core'
 
 // tslint:disable-next-line:no-unused-variable
-import { Observable }   from 'rxjs/Observable'
+import { Observable }   from 'rxjs'
+import {
+  map,
+}                       from 'rxjs/operators'
 
 import { Brolog }       from 'brolog'
 
@@ -43,7 +46,9 @@ export class AppComponent {
   }
 
   stateColor(wechaty: WechatyComponent) {
-    return wechaty.readyState.map(stateToColor)
+    return wechaty.readyState.pipe(
+      map(stateToColor),
+    )
 
     function stateToColor(state: ReadyState) {
       return state === WebSocket.OPEN

@@ -71,7 +71,12 @@ Moer details, see code. ;-]
 
 ## CHANGELOG
 
-### v0.3 master (May 2018)
+### v0.4 master (May 28th, 2018)
+
+1. Upgrade RxJS version from 5 to 6
+1. Upgrade Angular version from 5 to 6
+
+### v0.3 (May 1st, 2018)
 
 1. Support CI/CD to NPM@next
 

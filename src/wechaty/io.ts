@@ -5,7 +5,10 @@ import {
   Observable,
   Observer,
   Subject,
-}                   from 'rxjs/Rx'
+}                   from 'rxjs'
+import {
+  filter,
+}                   from 'rxjs/operators'
 
 import Brolog       from 'brolog'
 import StateSwitch  from 'state-switch'
@@ -188,8 +191,10 @@ export class IoService {
 
   private initStateDealer() {
     this.log.verbose('IoService', 'initStateDealer()')
-    this.readyState.filter(s => s === ReadyState.OPEN)
-                  .subscribe(open => this.stateOnOpen())
+    this.readyState.pipe(
+      filter(s => s === ReadyState.OPEN),
+    )
+    .subscribe(open => this.stateOnOpen())
   }
 
   /**
@@ -331,8 +336,10 @@ export class IoService {
     this.socketUpdateState()
 
     const future = new Promise(resolve => {
-      this.readyState.filter(s => s === ReadyState.CLOSED)
-                      .subscribe(resolve)
+      this.readyState.pipe(
+        filter(s => s === ReadyState.CLOSED),
+      )
+      .subscribe(resolve)
     })
     await future
 
