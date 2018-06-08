@@ -65,7 +65,7 @@
     "rollup": "^0.60.0",
     "rollup-plugin-json": "^3.0.0",
     "rxjs": "^6.0.0",
-    "shx": "^0.2.2",
+    "shx": "^0.3.0",
     "state-switch": "^0.4.5",
     "ts-node": "^6.0.2",
     "tsickle": "^0.29.0",
