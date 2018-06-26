@@ -35,16 +35,14 @@ import {
  * for payload
  */
 export interface ScanInfo {
-  url: string
-  code: number
+  qrcode: string
+  status: number
+  data?:  string
 }
 
 export interface UserInfo {
-  uin: number
+  id: number
   name: string
-  remark: string
-  sex: number
-  signature: string
 }
 
 @Component({
