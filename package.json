@@ -71,7 +71,7 @@
     "typescript": "2.7.2",
     "uglify-js": "^3.3.21",
     "zone.js": "^0.8.4",
-    "@angular-devkit/build-angular": "~0.800.1"
+    "@angular-devkit/build-angular": "~0.801.0"
   },
   "peerDependencies": {
     "brolog": ">=1",
