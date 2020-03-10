@@ -8,6 +8,7 @@ import {
 }                   from 'rxjs'
 import {
   filter,
+  share,
 }                   from 'rxjs/operators'
 
 import Brolog       from 'brolog'
@@ -227,7 +228,7 @@ export class IoService {
     })
 
     // 3. Subject for MO & MT Observers
-    this.event = Subject.create(this.moObserver, observable.share())
+    this.event = Subject.create(this.moObserver, observable.pipe(share()))
 
   }
 
