@@ -1,11 +1,10 @@
-dist: trusty
+dist: bionic
 os:
   - linux
 
 language: node_js
 node_js:
-  - '9'
-  - '10'
+  - '13'
 
 addons:
   apt:
