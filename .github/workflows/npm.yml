@@ -21,8 +21,11 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Test
-        run: npm test
+      # https://github.com/juliangruber/browser-run/issues/147#issuecomment-580958935
+      - name: Run Headless Test
+        uses: GabrielBB/xvfb-action@v1.0
+        with:
+          run: npm test
 
   publish:
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/v'))
