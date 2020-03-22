@@ -1,4 +1,4 @@
-# WECHATY NGMODULE [![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular) ![NPM](https://github.com/Chatie/angular/workflows/NPM/badge.svg)
+# Wechaty Web Component [![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular) ![NPM](https://github.com/Chatie/angular/workflows/NPM/badge.svg)
 
 ![Angular Library](https://chatie.github.io/angular/images/library-in-angular.jpg)
 
@@ -10,7 +10,7 @@ Wechaty Web Component NgModule Powered by Angular 9 & ng-packagr
 
 ### Demo
 
-<https://chatie.io/angular/>
+<https://stackblitz.com/edit/chatie-angular?file=src%2Fapp%2Fapp.component.html>
 
 Talk is cheap, show me the code:
 
