@@ -80,11 +80,6 @@
     "rxjs": ">=6",
     "state-switch": "*"
   },
-  "git": {
-    "scripts": {
-      "pre-push": "bash ./scripts/pre-push.sh"
-    }
-  },
   "publishConfig": {
     "access": "public",
     "tag": "next"
@@ -94,5 +89,10 @@
       "entryFile": "public_api.ts"
     },
     "whitelistedNonPeerDependencies": []
+  },
+  "git": {
+    "scripts": {
+      "pre-push": "npx git-scripts-pre-push"
+    }
   }
 }
