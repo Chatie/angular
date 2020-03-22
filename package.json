@@ -13,7 +13,7 @@
     "test": "npm run lint && npm run test:unit && npm run test:e2e",
     "test:e2e": "ng e2e",
     "test:unit": "ng test --watch=false",
-    "lint": "npm run lint:ts && npm run lint:ng && npm run ngc",
+    "lint": "npm run lint:ts && npm run lint:ng",
     "lint:ng": "ng lint",
     "lint:ts": "tsc --noEmit",
     "e2e": "ng e2e"
@@ -65,6 +65,7 @@
     "ng-packagr": "^9.0.3",
     "protractor": "~5.4.3",
     "rxjs": "~6.5.4",
+    "shx": "^0.3.2",
     "state-switch": "^0.6.18",
     "ts-node": "~8.3.0",
     "tslib": "^1.10.0",
@@ -85,7 +86,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "tag": "next"
   },
   "ngPackage": {
     "lib": {
