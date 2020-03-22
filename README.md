@@ -4,7 +4,7 @@
 [![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular)
 [![Greenkeeper badge](https://badges.greenkeeper.io/Chatie/angular.svg)](https://greenkeeper.io/)
 
-Wechaty Web Component NgModule Powered by Angular 5 & ng-packagr
+Wechaty Web Component NgModule Powered by Angular 9 & ng-packagr
 
 ![Angular Library](https://chatie.github.io/angular/images/library-in-angular.jpg)
 
@@ -71,7 +71,11 @@ Moer details, see code. ;-]
 
 ## CHANGELOG
 
-### v0.4 master (May 28th, 2018)
+### v0.5 master (Mar 23, 2020)
+
+1. Upgrade Angular version from 6 to 9
+
+### v0.4 (May 28th, 2018)
 
 1. Upgrade RxJS version from 5 to 6
 1. Upgrade Angular version from 5 to 6
@@ -100,16 +104,14 @@ Moer details, see code. ;-]
 
 Github Issue - https://github.com/chatie/angular/issues
 
-## AUTHOR
+## Author
 
-Huan LI <zixia@zixia.net> (http://linkedin.com/in/zixia)
+[Huan LI](https://github.com/huan) ([李卓桓](http://linkedin.com/in/zixia)) zixia@zixia.net
 
-<a href="http://stackoverflow.com/users/1123955/zixia">
-  <img src="http://stackoverflow.com/users/flair/1123955.png" width="208" height="58" alt="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
-</a>
+[![Profile of Huan LI (李卓桓) on StackOverflow](https://stackexchange.com/users/flair/265499.png)](https://stackexchange.com/users/265499)
 
-## COPYRIGHT & LICENSE
+## Copyright & License
 
-* Code & Docs ©2016-2018 zixia
-* Code released under the Apache-2.0 license
+* Code & Docs © 2016-now Huan LI \<zixia@zixia.net\>
+* Code released under the Apache-2.0 License
 * Docs released under Creative Commons

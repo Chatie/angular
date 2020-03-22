@@ -37,7 +37,7 @@ jobs:
       script:
         - echo "Packing NgModule ..."
         - if ./scripts/development-release.ts; then ./scripts/package-publish-config-tag-next.ts; fi
-        - npm run ng:packagr
+        - npm run build
         - echo "Deploying to NPM ..."
 
       before_deploy:

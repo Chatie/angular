@@ -11,8 +11,8 @@ import {
   share,
 }                   from 'rxjs/operators'
 
-import Brolog       from 'brolog'
-import StateSwitch  from 'state-switch'
+import { Brolog }       from 'brolog'
+import { StateSwitch }  from 'state-switch'
 
 export type WechatyEventName =
     'scan'
