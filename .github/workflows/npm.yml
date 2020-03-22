@@ -41,7 +41,6 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo apt install jq
           NODE_JQ_SKIP_INSTALL_BINARY=true npm install -g pkg-jq
           npm install
 
@@ -63,6 +62,7 @@ jobs:
       - name: Is A Publish Branch
         if: steps.check-branch.outputs.match == 'true'
         run: |
+          export JQ_PATH=/usr/bin/jq
           NAME=$(npx pkg-jq -r .name)
           VERSION=$(npx pkg-jq -r .version)
           if npx version-exists "$NAME" "$VERSION"
