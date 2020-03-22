@@ -1,10 +1,10 @@
 # WECHATY NGMODULE [![npm version](https://badge.fury.io/js/%40chatie%2Fangular.svg)](https://www.npmjs.com/package/@chatie/angular) ![NPM](https://github.com/Chatie/angular/workflows/NPM/badge.svg)
 
-Wechaty Web Component NgModule Powered by Angular 9 & ng-packagr
-
 ![Angular Library](https://chatie.github.io/angular/images/library-in-angular.jpg)
 
 > Picture credit: [How to create an Angular library](http://www.dzurico.com/how-to-create-an-angular-library/)
+
+Wechaty Web Component NgModule Powered by Angular 9 & ng-packagr
 
 ## USAGE
 
