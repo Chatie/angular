@@ -47,7 +47,7 @@
     "@angular/forms": "~9.0.5",
     "@angular/http": "^7.2.16",
     "@angular/language-service": "~9.0.5",
-    "@angular/platform-browser": "~9.0.5",
+    "@angular/platform-browser": "~9.1.9",
     "@angular/platform-browser-dynamic": "~9.0.5",
     "@angular/router": "~9.0.5",
     "@chatie/git-scripts": "^0.5.2",
