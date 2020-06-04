@@ -43,7 +43,7 @@
     "@angular/common": "~9.1.9",
     "@angular/compiler": "~9.0.5",
     "@angular/compiler-cli": "~9.0.5",
-    "@angular/core": "~9.0.5",
+    "@angular/core": "~9.1.9",
     "@angular/forms": "~9.0.5",
     "@angular/http": "^7.2.16",
     "@angular/language-service": "~9.0.5",
