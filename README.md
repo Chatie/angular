@@ -69,6 +69,10 @@ Moer details, see code. ;-]
 
 * [Working with scoped packages](https://docs.npmjs.com/getting-started/scoped-packages)
 
+## RESOURCES
+
+* [Angular-AI-Chat-Bot](https://github.com/PoghosyanHayk/Angular-AI-Chat-Bot/tree/master/chat-bot)
+
 ## CHANGELOG
 
 ### v0.6 master (Mar 23, 2020)
