@@ -1,5 +1,5 @@
 import {
-  async,
+  waitForAsync,
   ComponentFixture,
   TestBed,
 }                           from '@angular/core/testing'
@@ -12,7 +12,7 @@ describe('WechatyComponent', () => {
   let component: WechatyComponent
   let fixture: ComponentFixture<WechatyComponent>
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ WechatyComponent ],
       providers: [

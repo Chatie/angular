@@ -192,10 +192,13 @@ export class IoService {
 
   private initStateDealer() {
     this.log.verbose('IoService', 'initStateDealer()')
+
+    const isReadyStateOpen = (s: ReadyState) => s === ReadyState.OPEN
+
     this.readyState.pipe(
-      filter(s => s === ReadyState.OPEN),
+      filter(isReadyStateOpen),
     )
-    .subscribe(open => this.stateOnOpen())
+      .subscribe(open => this.stateOnOpen())
   }
 
   /**
@@ -220,7 +223,7 @@ export class IoService {
     }
 
     // 2. Mobile Terminated. mtObserver.next() means mobile is receiving
-    const observable = Observable.create((observer: Observer<IoEvent>) => {
+    const observable = new Observable((observer: Observer<IoEvent>) => {
       this.log.verbose('IoService', 'initRxSocket() Observable.create()')
       this.mtObserver = observer
 

@@ -113,16 +113,16 @@ export class WechatyComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.log.verbose('WechatyComponent', 'ngOninit() with token: ' + this.token)
+    this.log.verbose('WechatyComponent', 'ngOnInit() with token: ' + this.token)
 
     this.ioService = new IoService()
     await this.ioService.init()
 
     this.ioService.event.subscribe(this.onIo.bind(this))
-    this.log.silly('WechatyComponent', 'ngOninit() ioService.event.subscribe()-ed')
+    this.log.silly('WechatyComponent', 'ngOnInit() ioService.event.subscribe()-ed')
 
     /**
-     * @Input(token) is not inittialized in constructor()
+     * @Input(token) might not initialized in constructor()
      */
     if (this.token) {
       this.ioService.token(this.token)
