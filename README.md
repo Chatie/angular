@@ -14,7 +14,8 @@ Wechaty Web Component NgModule Powered by Angular 9 & ng-packagr
 
 ### Demo
 
-<https://stackblitz.com/edit/chatie-angular?file=src%2Fapp%2Fapp.component.html>
+1. StackBlitz: <https://stackblitz.com/edit/chatie-angular?file=src%2Fapp%2Fapp.component.html>
+1. Plunker: <https://embed.plnkr.co/qi2au1/?show=app.component.ts,app.component.html,preview&deferRun&autoCloseSidebar=true>
 
 Talk is cheap, show me the code:
 
