@@ -385,8 +385,8 @@ export class IoService {
 
   private socketUpdateState() {
     this.log.verbose('IoService', 'socketUpdateState() is %s',
-                                  ReadyState[this._websocket.readyState],
-                    )
+      ReadyState[this._websocket?.readyState],
+    )
 
     if (!this._websocket) {
       this.log.error('IoService', 'socketUpdateState() no _websocket')
