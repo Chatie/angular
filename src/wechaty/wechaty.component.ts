@@ -216,7 +216,7 @@ export class WechatyComponent implements OnInit, OnDestroy {
       name: 'botie',
       payload: {
         args: ['message'],
-        script: 'return this.syncMessage(message)',
+        source: 'return this.syncMessage(message)',
       },
     }
     if (!this.ioService) {
