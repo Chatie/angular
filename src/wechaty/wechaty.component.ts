@@ -209,6 +209,22 @@ export class WechatyComponent implements OnInit, OnDestroy {
     this.ioService.event.next(shutdownEvent)
   }
 
+  public startSyncMessage() {
+    this.log.verbose('WechatyComponent', 'startSyncMessage()')
+
+    const botieEvent: IoEvent = {
+      name: 'botie',
+      payload: {
+        args: ['message'],
+        script: 'return this.syncMessage(message)',
+      },
+    }
+    if (!this.ioService) {
+      throw new Error('no ioService')
+    }
+    this.ioService.event.next(botieEvent)
+  }
+
   startTimer() {
     this.log.verbose('WechatyComponent', 'startTimer()')
     this.ender = new Subject()

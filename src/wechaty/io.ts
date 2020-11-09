@@ -24,8 +24,8 @@ export type WechatyEventName =
   | 'update'
   | 'error'
 
-export type ServerEventName =
-  'sys'
+export type ServerEventName = 'sys'
+                            | 'botie'
 
 export type IoEventName = 'raw' | WechatyEventName | ServerEventName
 
