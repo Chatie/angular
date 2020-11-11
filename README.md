@@ -76,7 +76,11 @@ Moer details, see code. ;-]
 
 ## CHANGELOG
 
-### v0.6 master (Mar 23, 2020)
+### v0.8 master (Nov, 2020)
+
+1. Upgrde Angulr version from 9 to 10
+
+### v0.6 (Mar 23, 2020)
 
 1. Upgrade Angular version from 6 to 9
 1. Enable GitHub Actions
