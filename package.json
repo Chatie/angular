@@ -46,7 +46,7 @@
     "@angular/core": "~10.2.2",
     "@angular/forms": "~10.2.2",
     "@angular/http": "^7.2.16",
-    "@angular/language-service": "~10.2.2",
+    "@angular/language-service": "~11.0.0",
     "@angular/platform-browser-dynamic": "~10.2.2",
     "@angular/platform-browser": "~10.2.2",
     "@chatie/git-scripts": "^0.6.2",
