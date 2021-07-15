@@ -50,7 +50,7 @@
     "@angular/platform-browser-dynamic": "~11.1.2",
     "@angular/platform-browser": "~11.1.2",
     "@chatie/git-scripts": "^0.6.2",
-    "@angular/router": "~11.1.2",
+    "@angular/router": "~12.1.2",
     "@types/jasmine": "~3.6.3",
     "@types/jasminewd2": "~2.0.8",
     "@types/node": "^15.0.1",
