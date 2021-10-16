@@ -48,7 +48,7 @@
     "@angular/http": "^7.2.16",
     "@angular/language-service": "~11.2.0",
     "@angular/platform-browser-dynamic": "~11.1.2",
-    "@angular/platform-browser": "~11.1.2",
+    "@angular/platform-browser": "~11.2.5",
     "@chatie/git-scripts": "^0.6.2",
     "@angular/router": "~11.1.2",
     "@types/jasmine": "~3.6.3",
