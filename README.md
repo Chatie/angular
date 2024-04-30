@@ -123,6 +123,6 @@ GitHub Issue - https://github.com/chatie/angular/issues
 
 ## Copyright & License
 
-* Code & Docs © 2016-now Huan LI \<zixia@zixia.net\>
+* Code & Docs © 2016-now Huan Li \<huan@chatie.io\>
 * Code released under the Apache-2.0 License
 * Docs released under Creative Commons
